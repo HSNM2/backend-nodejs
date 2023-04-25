@@ -1,0 +1,29 @@
+{
+  "name": "backend-nodejs",
+  "version": "1.0.0",
+  "description": "糖漬時光的後端 Server",
+  "main": "app.js",
+  "repository": "git@github.com:HSNM2/backend-nodejs.git",
+  "author": "HSNM2",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn nodemon app.js",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:undo": "npx sequelize-cli db:migrate:undo",
+    "db:undo:all": "npx sequelize-cli db:migrate:undo:all",
+    "db:status": "npx sequelize-cli db:migrate:status"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "sequelize-cli": "^6.6.0"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.10.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.31.0"
+  }
+}
