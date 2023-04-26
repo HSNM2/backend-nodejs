@@ -15,6 +15,8 @@
     "db:status": "npx sequelize-cli db:migrate:status"
   },
   "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
