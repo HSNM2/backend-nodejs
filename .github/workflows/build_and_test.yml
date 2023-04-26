@@ -1,0 +1,23 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.17.1
+    - name: install project dependencies
+      run: npm install
+    - name: test project
+      run: npm test
