@@ -14,11 +14,11 @@ app.use(cookieParser())
 app.use(cors(corsOption))
 app.use(express.json())
 
-app.get('/', function(req, res) {
-    res.send('<h1>Hello World!</h1>')
+app.get('/', function (req, res) {
+  res.send('<h1>Hello World!</h1>')
 })
 
 const port = process.env['PORT'] || 3002
-app.listen(port, () => {  
+app.listen(port, () => {
   console.log(`The application listening listening on port ${port}`)
 })
