@@ -8,12 +8,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "yarn nodemon app.js",
+    "test": "jest",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:undo": "npx sequelize-cli db:migrate:undo",
     "db:undo:all": "npx sequelize-cli db:migrate:undo:all",
     "db:status": "npx sequelize-cli db:migrate:status"
   },
   "devDependencies": {
+    "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "sequelize-cli": "^6.6.0"
   },
