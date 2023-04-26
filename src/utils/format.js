@@ -1,7 +1,7 @@
 const CONVERT = {
-    stringAddSymbol: (str) => `${str}！`
+  stringAddSymbol: (str) => `${str}！`
 }
 
 module.exports = {
-    CONVERT
+  CONVERT
 }
