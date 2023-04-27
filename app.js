@@ -18,6 +18,9 @@ app.use(cookieParser())
 app.use(cors(corsOption))
 app.use(express.json())
 
+const API_PREFIX = '/api'
+app.use(`${API_PREFIX}/users`, usersRouter)
+
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
 })
