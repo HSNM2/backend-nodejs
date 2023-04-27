@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "yarn nodemon app.js",
     "test": "jest",
+    "db:init": "npx sequelize-cli init",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:undo": "npx sequelize-cli db:migrate:undo",
     "db:undo:all": "npx sequelize-cli db:migrate:undo:all",
