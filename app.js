@@ -3,6 +3,10 @@ const express = require('express')
 const app = express()
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const usersRouter = require('./routers/uesrs')
+const { testDBConnection } = require('./config/db')
+testDBConnection()
+
 const corsOption = {
   origin: '*',
   credentials: true,
