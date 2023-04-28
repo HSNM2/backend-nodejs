@@ -3,22 +3,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('course', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      name: Sequelize.STRING,
-      nickName: Sequelize.CHAR,
-      gender: Sequelize.CHAR(1),
-      birthday: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      },
-      phone: Sequelize.CHAR(10),
-      email: Sequelize.CHAR(30),
-      address: Sequelize.TEXT,
+      price: Sequelize.INTEGER,
+      originPrice: Sequelize.INTEGER,
+      name: Sequelize.CHAR(255),
+      tag: Sequelize.CHAR(255),
+      image_path: Sequelize.CHAR(255),
+      link: Sequelize.STRING,
+      subTitle: Sequelize.CHAR(255),
+      description: Sequelize.TEXT,
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
@@ -37,7 +35,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('course')
     /**
      * Add reverting commands here.
      *
