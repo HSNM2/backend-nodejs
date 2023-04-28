@@ -16,7 +16,8 @@ User = db.define('user', {
     type: DataTypes.DATE
   },
   phone: {
-    type: DataTypes.CHAR(10)
+    type: DataTypes.CHAR(10),
+    charset: 'utf8mb4'
   },
   email: {
     type: DataTypes.CHAR(30)
