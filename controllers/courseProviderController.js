@@ -1,3 +1,4 @@
+const { Course } = require('../models/courses')
 const { errorTemplateFun } = require('../src/utils/template')
 
 exports.courses = {
@@ -20,10 +21,25 @@ exports.course = {
   },
   post: async (req, res) => {
     try {
+      const { price, originPrice, name, tag, image_path, link, subTitle, description } = req.body
+
+      const tagData = tag.join()
+
+      const result = await Course.create({
+        price,
+        originPrice,
+        name,
+        tag: tagData,
+        image_path,
+        link,
+        subTitle,
+        description
+      })
+
       res.json({
         success: true,
         data: {
-          id: 'course post!'
+          id: result.id
         }
       })
     } catch (error) {
