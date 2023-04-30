@@ -6,5 +6,6 @@ router.post('/register', userController.register.post)
 router.post('/login', userController.login.post)
 router.post('/logout', userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)
+router.get('/courses', userController.courses.get)
 
 module.exports = router

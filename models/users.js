@@ -1,8 +1,10 @@
 const { db } = require('../config/db')
 const { DataTypes } = require('sequelize')
 
+console.log(`=== Users Model Create ===`)
+
 let User = null
-User = db.define('user', {
+User = db.define('users', {
   name: {
     type: DataTypes.STRING
   },
@@ -25,14 +27,6 @@ User = db.define('user', {
   address: {
     type: DataTypes.STRING
   }
-})
-
-User.associate = function (models) {
-  User.belongsToMany(models.Course, { through: 'users_courses', foreignKey: 'user_id' })
-}
-
-User.sync().then(() => {
-  console.log(`User Model synced`)
 })
 
 module.exports = {

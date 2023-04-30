@@ -1,6 +1,8 @@
 const { db } = require('../config/db')
 const { DataTypes } = require('sequelize')
 
+console.log(`=== Courses Model Create ===`)
+
 let Course = null
 Course = db.define('courses', {
   price: {
@@ -27,14 +29,6 @@ Course = db.define('courses', {
   description: {
     type: DataTypes.TEXT
   }
-})
-
-Course.associate = function (models) {
-  Course.belongsToMany(models.User, { through: 'users_courses', foreignKey: 'course_id' })
-}
-
-Course.sync().then(() => {
-  console.log(`Course Model synced`)
 })
 
 module.exports = {
