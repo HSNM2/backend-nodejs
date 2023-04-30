@@ -4,7 +4,7 @@ const app = express()
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const usersRouter = require('./routers/uesrs')
-const courseProvider = require('./routers/courseProvider')
+const courseProviderRouter = require('./routers/courseProvider')
 const { testDBConnection } = require('./config/db')
 testDBConnection()
 
@@ -21,7 +21,7 @@ app.use(express.json())
 
 const API_PREFIX = '/api'
 app.use(`${API_PREFIX}/users`, usersRouter)
-app.use(`${API_PREFIX}/courseProvider`, courseProvider)
+app.use(`${API_PREFIX}/courseProvider`, courseProviderRouter)
 
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
