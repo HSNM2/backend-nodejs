@@ -10,15 +10,15 @@ module.exports = {
         autoIncrement: true
       },
       name: Sequelize.STRING,
-      nickName: Sequelize.CHAR,
+      nickName: Sequelize.STRING,
       gender: Sequelize.CHAR(1),
       birthday: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       phone: Sequelize.CHAR(10),
-      email: Sequelize.CHAR(30),
-      address: Sequelize.TEXT,
+      email: Sequelize.STRING,
+      address: Sequelize.STRING,
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

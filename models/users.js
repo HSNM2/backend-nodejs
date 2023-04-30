@@ -20,12 +20,16 @@ User = db.define('user', {
     charset: 'utf8mb4'
   },
   email: {
-    type: DataTypes.CHAR(30)
+    type: DataTypes.STRING
   },
   address: {
-    type: DataTypes.TEXT
+    type: DataTypes.STRING
   }
 })
+
+User.associate = function (models) {
+  User.belongsToMany(models.Course, { through: 'users_courses', foreignKey: 'user_id' })
+}
 
 User.sync().then(() => {
   console.log(`User Model synced`)

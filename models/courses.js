@@ -10,24 +10,28 @@ Course = db.define('courses', {
     type: DataTypes.INTEGER
   },
   name: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   tag: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   image_path: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.TEXT
   },
   link: {
     type: DataTypes.STRING
   },
   subTitle: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   description: {
     type: DataTypes.TEXT
   }
 })
+
+Course.associate = function (models) {
+  Course.belongsToMany(models.User, { through: 'users_courses', foreignKey: 'course_id' })
+}
 
 Course.sync().then(() => {
   console.log(`Course Model synced`)
