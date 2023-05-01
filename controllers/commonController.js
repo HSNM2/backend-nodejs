@@ -13,14 +13,14 @@ exports.checkout = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           data: {
             message: 'course bought successfully'
           }
         })
       } else {
         return res.json({
-          success: false
+          status: false
         })
       }
     } catch (error) {

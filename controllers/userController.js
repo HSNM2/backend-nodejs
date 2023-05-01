@@ -18,7 +18,7 @@ exports.register = {
 
       if (user) {
         res.json({
-          success: true,
+          status: true,
           data: {
             type: 'user register!'
           }
@@ -44,7 +44,7 @@ exports.login = {
 
       if (!user) {
         return res.status(404).json({
-          success: false,
+          status: false,
           message: 'User Not Found.'
         })
       }
@@ -53,7 +53,7 @@ exports.login = {
 
       if (!passwordIsValid) {
         return res.status(401).json({
-          success: false,
+          status: false,
           message: 'Invalid Password!'
         })
       }
@@ -68,7 +68,7 @@ exports.login = {
           secure: process.env.NODE_ENV === 'production'
         })
         .json({
-          success: true,
+          status: true,
           data: {
             type: 'user login!'
           }
@@ -84,7 +84,7 @@ exports.logout = {
   post: async (req, res) => {
     try {
       res.clearCookie('access_token').json({
-        success: true,
+        status: true,
         data: {
           type: 'user logout!'
         }
@@ -100,7 +100,7 @@ exports.forgetPassword = {
   post: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           type: 'user forgetPassword!'
         }
@@ -122,7 +122,7 @@ exports.profile = {
 
       if (!user) {
         return res.status(404).json({
-          success: false,
+          status: false,
           message: 'User Not Found.'
         })
       }
@@ -142,7 +142,7 @@ exports.profile = {
 
       if (result) {
         res.json({
-          success: true,
+          status: true,
           data: {
             type: 'user profile!'
           }
@@ -169,7 +169,7 @@ exports.courses = {
       })
 
       res.json({
-        success: true,
+        status: true,
         data: { ...result.dataValues }
       })
     } catch (error) {

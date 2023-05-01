@@ -6,7 +6,7 @@ const verifyToken = async (req, res, next) => {
 
   if (!token) {
     return res.status(401).json({
-      success: false,
+      status: false,
       message: 'Access token not found'
     })
   }
@@ -14,7 +14,7 @@ const verifyToken = async (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({
-        success: false,
+        status: false,
         message: 'Invalid token'
       })
     }

@@ -9,7 +9,7 @@ exports.course = {
   get: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: `course get! course ID: ${req.params.courseid}`
         }
@@ -37,7 +37,7 @@ exports.course = {
       })
 
       res.json({
-        success: true,
+        status: true,
         data: {
           id: result.id
         }
@@ -50,7 +50,7 @@ exports.course = {
   patch: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: 'course patch!'
         }
@@ -63,7 +63,7 @@ exports.course = {
   delete: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: 'course delete!'
         }
