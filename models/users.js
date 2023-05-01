@@ -5,10 +5,18 @@ console.log(`=== Users Model Create ===`)
 
 let User = null
 User = db.define('users', {
+  id: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    primaryKey: true
+  },
   name: {
     type: DataTypes.STRING
   },
   nickName: {
+    type: DataTypes.STRING
+  },
+  password: {
     type: DataTypes.STRING
   },
   gender: {
