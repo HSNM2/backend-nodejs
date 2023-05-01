@@ -1,6 +1,8 @@
 const { db } = require('../config/db')
 const { DataTypes } = require('sequelize')
 
+console.log(`=== Courses Model Create ===`)
+
 let Course = null
 Course = db.define('courses', {
   price: {
@@ -10,27 +12,23 @@ Course = db.define('courses', {
     type: DataTypes.INTEGER
   },
   name: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   tag: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   image_path: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.TEXT
   },
   link: {
     type: DataTypes.STRING
   },
   subTitle: {
-    type: DataTypes.CHAR(255)
+    type: DataTypes.STRING
   },
   description: {
     type: DataTypes.TEXT
   }
-})
-
-Course.sync().then(() => {
-  console.log(`Course Model synced`)
 })
 
 module.exports = {

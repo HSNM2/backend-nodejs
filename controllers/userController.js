@@ -1,4 +1,5 @@
 const { User } = require('../models/users')
+const { Course } = require('../models/courses')
 const { errorTemplateFun } = require('../src/utils/template')
 
 exports.register = {
@@ -68,6 +69,30 @@ exports.forgetPassword = {
         data: {
           type: 'user forgetPassword!'
         }
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.courses = {
+  get: async (req, res) => {
+    try {
+      const { userID } = req.body
+
+      const result = await User.findByPk(userID, {
+        include: [
+          {
+            model: Course
+          }
+        ]
+      })
+
+      res.json({
+        success: true,
+        data: { ...result.dataValues }
       })
     } catch (error) {
       console.error(error)

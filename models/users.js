@@ -1,8 +1,10 @@
 const { db } = require('../config/db')
 const { DataTypes } = require('sequelize')
 
+console.log(`=== Users Model Create ===`)
+
 let User = null
-User = db.define('user', {
+User = db.define('users', {
   name: {
     type: DataTypes.STRING
   },
@@ -20,15 +22,11 @@ User = db.define('user', {
     charset: 'utf8mb4'
   },
   email: {
-    type: DataTypes.CHAR(30)
+    type: DataTypes.STRING
   },
   address: {
-    type: DataTypes.TEXT
+    type: DataTypes.STRING
   }
-})
-
-User.sync().then(() => {
-  console.log(`User Model synced`)
 })
 
 module.exports = {

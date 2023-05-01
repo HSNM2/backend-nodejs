@@ -5,20 +5,33 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
       id: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      name: Sequelize.STRING,
-      nickName: Sequelize.CHAR,
-      gender: Sequelize.CHAR(1),
+      name: {
+        type: Sequelize.STRING
+      },
+      nickName: {
+        type: Sequelize.STRING
+      },
+      gender: {
+        type: Sequelize.CHAR(1)
+      },
       birthday: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      phone: Sequelize.CHAR(10),
-      email: Sequelize.CHAR(30),
-      address: Sequelize.TEXT,
+      phone: {
+        type: Sequelize.CHAR(10)
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      address: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
@@ -28,21 +41,9 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     })
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users')
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
   }
 }
