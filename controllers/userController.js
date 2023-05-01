@@ -2,7 +2,8 @@ const { User } = require('../models/users')
 const { Course } = require('../models/courses')
 const { errorTemplateFun } = require('../src/utils/template')
 
-var bcrypt = require('bcryptjs')
+let jwt = require('jsonwebtoken')
+let bcrypt = require('bcryptjs')
 
 exports.register = {
   post: async (req, res) => {
@@ -30,13 +31,46 @@ exports.register = {
 
 exports.login = {
   post: async (req, res) => {
+    const { email, password } = req.body
+
     try {
-      res.json({
-        success: true,
-        data: {
-          type: 'user login!'
+      const user = await User.findOne({
+        where: {
+          email
         }
       })
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User Not Found.'
+        })
+      }
+
+      let passwordIsValid = bcrypt.compareSync(password, user.password)
+
+      if (!passwordIsValid) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid Password!'
+        })
+      }
+
+      let token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+        expiresIn: 86400 // 24 hours
+      })
+
+      res
+        .cookie('access_token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production'
+        })
+        .json({
+          success: true,
+          data: {
+            type: 'user login!'
+          }
+        })
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
@@ -47,7 +81,7 @@ exports.login = {
 exports.logout = {
   post: async (req, res) => {
     try {
-      res.json({
+      res.clearCookie('access_token').json({
         success: true,
         data: {
           type: 'user logout!'
