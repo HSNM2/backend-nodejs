@@ -112,6 +112,49 @@ exports.forgetPassword = {
   }
 }
 
+exports.profile = {
+  patch: async (req, res) => {
+    const { name, nickName, gender } = req.body
+
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User Not Found.'
+        })
+      }
+
+      const result = await User.update(
+        {
+          name,
+          nickName,
+          gender
+        },
+        {
+          where: {
+            id: userId
+          }
+        }
+      )
+
+      if (result) {
+        res.json({
+          success: true,
+          data: {
+            type: 'user profile!'
+          }
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
 exports.courses = {
   get: async (req, res) => {
     try {
