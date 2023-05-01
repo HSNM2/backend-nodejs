@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/userController')
 
-router.post('/register', userController.register.post)
+const { verifySignUp } = require('../middleware')
+
+router.post('/register', [verifySignUp.checkDuplicateEmail], userController.register.post)
 router.post('/login', userController.login.post)
 router.post('/logout', userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)

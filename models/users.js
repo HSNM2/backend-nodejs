@@ -11,6 +11,9 @@ User = db.define('users', {
   nickName: {
     type: DataTypes.STRING
   },
+  password: {
+    type: DataTypes.STRING
+  },
   gender: {
     type: DataTypes.CHAR(1)
   },

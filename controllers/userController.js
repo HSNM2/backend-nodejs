@@ -2,29 +2,28 @@ const { User } = require('../models/users')
 const { Course } = require('../models/courses')
 const { errorTemplateFun } = require('../src/utils/template')
 
+var bcrypt = require('bcryptjs')
+
 exports.register = {
   post: async (req, res) => {
-    const { name, nickName, gender, birthday, phone, email, address } = req.body
-
+    const { email, password } = req.body
     try {
-      const result = await User.create({
-        name,
-        nickName,
-        gender,
-        birthday,
-        phone,
-        email,
-        address
+      const user = await User.create({
+        email: email,
+        password: bcrypt.hashSync(password, 10)
       })
-      res.json({
-        success: true,
-        data: {
-          id: result.id
-        }
-      })
+
+      if (user) {
+        res.json({
+          success: true,
+          data: {
+            type: 'user register!'
+          }
+        })
+      }
     } catch (error) {
       console.error(error)
-      res.json(errorTemplateFun(error))
+      res.status(500).json(errorTemplateFun(error))
     }
   }
 }
