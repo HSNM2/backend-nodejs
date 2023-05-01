@@ -143,9 +143,7 @@ exports.profile = {
       if (result) {
         res.json({
           status: true,
-          data: {
-            type: 'user profile!'
-          }
+          message: '使用者資料更新成功'
         })
       }
     } catch (error) {
