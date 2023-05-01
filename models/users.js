@@ -5,6 +5,9 @@ console.log(`=== Users Model Create ===`)
 
 let User = null
 User = db.define('users', {
+  hashId: {
+    type: DataTypes.STRING
+  },
   name: {
     type: DataTypes.STRING
   },

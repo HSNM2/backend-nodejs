@@ -4,12 +4,14 @@ const { errorTemplateFun } = require('../src/utils/template')
 
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
+const { generateUserId } = require('../src/js/generate')
 
 exports.register = {
   post: async (req, res) => {
     const { email, password } = req.body
     try {
       const user = await User.create({
+        hashId: generateUserId(),
         email: email,
         password: bcrypt.hashSync(password, 10)
       })
