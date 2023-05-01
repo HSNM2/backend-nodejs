@@ -19,9 +19,7 @@ exports.register = {
       if (user) {
         res.json({
           status: true,
-          data: {
-            type: 'user register!'
-          }
+          message: '註冊成功'
         })
       }
     } catch (error) {
@@ -45,7 +43,7 @@ exports.login = {
       if (!user) {
         return res.status(404).json({
           status: false,
-          message: 'User Not Found.'
+          message: '查無此使用者'
         })
       }
 
@@ -54,7 +52,7 @@ exports.login = {
       if (!passwordIsValid) {
         return res.status(401).json({
           status: false,
-          message: 'Invalid Password!'
+          message: '密碼錯誤'
         })
       }
 
@@ -69,9 +67,7 @@ exports.login = {
         })
         .json({
           status: true,
-          data: {
-            type: 'user login!'
-          }
+          message: '登入成功'
         })
     } catch (error) {
       console.error(error)
@@ -85,9 +81,7 @@ exports.logout = {
     try {
       res.clearCookie('access_token').json({
         status: true,
-        data: {
-          type: 'user logout!'
-        }
+        message: '登出成功'
       })
     } catch (error) {
       console.error(error)
@@ -123,7 +117,7 @@ exports.profile = {
       if (!user) {
         return res.status(404).json({
           status: false,
-          message: 'User Not Found.'
+          message: '查無此使用者'
         })
       }
 

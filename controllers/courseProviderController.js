@@ -38,9 +38,7 @@ exports.course = {
 
       res.json({
         status: true,
-        data: {
-          id: result.id
-        }
+        message: '課程建立成功'
       })
     } catch (error) {
       console.log(error)
