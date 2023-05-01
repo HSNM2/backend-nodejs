@@ -9,5 +9,6 @@ router.post('/login', userController.login.post)
 router.post('/logout', [authJwt.verifyToken], userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)
 router.get('/courses', userController.courses.get)
+router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
 
 module.exports = router
