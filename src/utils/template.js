@@ -1,5 +1,5 @@
 const errorTemplateFun = (errMsg) => ({
-  success: false,
+  status: false,
   data: {
     errorMessage: errMsg
   }

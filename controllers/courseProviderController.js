@@ -9,7 +9,7 @@ exports.course = {
   get: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: `course get! course ID: ${req.params.courseid}`
         }
@@ -37,10 +37,8 @@ exports.course = {
       })
 
       res.json({
-        success: true,
-        data: {
-          id: result.id
-        }
+        status: true,
+        message: '課程建立成功'
       })
     } catch (error) {
       console.log(error)
@@ -50,7 +48,7 @@ exports.course = {
   patch: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: 'course patch!'
         }
@@ -63,7 +61,7 @@ exports.course = {
   delete: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           id: 'course delete!'
         }

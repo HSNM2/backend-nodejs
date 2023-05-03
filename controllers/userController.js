@@ -18,10 +18,8 @@ exports.register = {
 
       if (user) {
         res.json({
-          success: true,
-          data: {
-            type: 'user register!'
-          }
+          status: true,
+          message: '註冊成功'
         })
       }
     } catch (error) {
@@ -44,8 +42,8 @@ exports.login = {
 
       if (!user) {
         return res.status(404).json({
-          success: false,
-          message: 'User Not Found.'
+          status: false,
+          message: '查無此使用者'
         })
       }
 
@@ -53,8 +51,8 @@ exports.login = {
 
       if (!passwordIsValid) {
         return res.status(401).json({
-          success: false,
-          message: 'Invalid Password!'
+          status: false,
+          message: '密碼錯誤'
         })
       }
 
@@ -68,10 +66,8 @@ exports.login = {
           secure: process.env.NODE_ENV === 'production'
         })
         .json({
-          success: true,
-          data: {
-            type: 'user login!'
-          }
+          status: true,
+          message: '登入成功'
         })
     } catch (error) {
       console.error(error)
@@ -84,10 +80,8 @@ exports.logout = {
   post: async (req, res) => {
     try {
       res.clearCookie('access_token').json({
-        success: true,
-        data: {
-          type: 'user logout!'
-        }
+        status: true,
+        message: '登出成功'
       })
     } catch (error) {
       console.error(error)
@@ -100,7 +94,7 @@ exports.forgetPassword = {
   post: async (req, res) => {
     try {
       res.json({
-        success: true,
+        status: true,
         data: {
           type: 'user forgetPassword!'
         }
@@ -122,8 +116,8 @@ exports.profile = {
 
       if (!user) {
         return res.status(404).json({
-          success: false,
-          message: 'User Not Found.'
+          status: false,
+          message: '查無此使用者'
         })
       }
 
@@ -142,10 +136,8 @@ exports.profile = {
 
       if (result) {
         res.json({
-          success: true,
-          data: {
-            type: 'user profile!'
-          }
+          status: true,
+          message: '使用者資料更新成功'
         })
       }
     } catch (error) {
@@ -169,7 +161,7 @@ exports.courses = {
       })
 
       res.json({
-        success: true,
+        status: true,
         data: { ...result.dataValues }
       })
     } catch (error) {
