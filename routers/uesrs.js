@@ -10,5 +10,7 @@ router.post('/logout', [authJwt.verifyToken], userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)
 router.get('/courses', userController.courses.get)
 router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
+router.post('/tag/:courseId', [authJwt.verifyToken], userController.tag.post)
+router.delete('/tag/:courseId', [authJwt.verifyToken], userController.tag.delete)
 
 module.exports = router
