@@ -170,3 +170,32 @@ exports.courses = {
     }
   }
 }
+
+exports.tag = {
+  post: async (req, res) => {
+    try {
+      const { courseID, tag } = req.body
+
+      res.json({
+        status: true,
+        data: '收藏新增成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  delete: async (req, res) => {
+    try {
+      const { courseID, tag } = req.body
+
+      res.json({
+        status: true,
+        data: '收藏刪除成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
