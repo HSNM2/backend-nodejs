@@ -174,7 +174,7 @@ exports.courses = {
 exports.tag = {
   post: async (req, res) => {
     try {
-      const { courseID, tag } = req.body
+      const { courseId } = req.params
 
       res.json({
         status: true,
@@ -187,7 +187,7 @@ exports.tag = {
   },
   delete: async (req, res) => {
     try {
-      const { courseID, tag } = req.body
+      const { courseId } = req.params
 
       res.json({
         status: true,
