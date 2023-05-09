@@ -6,6 +6,7 @@ const cors = require('cors')
 const commonRouter = require('./routers/common')
 const usersRouter = require('./routers/uesrs')
 const courseProviderRouter = require('./routers/courseProvider')
+const coursesRouter = require('./routers/courses')
 require('./config/dbInit')
 
 const corsOption = {
@@ -23,6 +24,7 @@ const API_PREFIX = '/api'
 app.use(`${API_PREFIX}`, commonRouter)
 app.use(`${API_PREFIX}/user`, usersRouter)
 app.use(`${API_PREFIX}/courseProvider`, courseProviderRouter)
+app.use(`${API_PREFIX}/courses`, coursesRouter)
 
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
