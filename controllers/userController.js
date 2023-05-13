@@ -107,6 +107,33 @@ exports.forgetPassword = {
 }
 
 exports.profile = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: '查無此使用者'
+        })
+      }
+
+      res.json({
+        status: true,
+        data: {
+          name: user.name,
+          nickName: user.nickName,
+          gender: user.gender,
+          birthday: new Date(user.birthday).getTime(),
+          email: user.email,
+          address: user.address
+        }
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
   patch: async (req, res) => {
     const { name, nickName, gender } = req.body
 
