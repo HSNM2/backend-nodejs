@@ -137,7 +137,7 @@ exports.profile = {
     }
   },
   patch: async (req, res) => {
-    const { name, nickName, gender } = req.body
+    const { name, nickName, gender, phone, birthday, address } = req.body
 
     try {
       const { userId } = req
@@ -154,7 +154,10 @@ exports.profile = {
         {
           name,
           nickName,
-          gender
+          gender,
+          phone,
+          birthday: new Date(birthday),
+          address
         },
         {
           where: {
