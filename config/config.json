@@ -7,17 +7,17 @@
     "dialect": "postgres"
   },
   "test": {
-    "username": "root",
+    "username": "postgres",
     "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "database": "nodedb_test",
+    "host": "testsweettimedb.cwhwlslobxo9.ap-northeast-1.rds.amazonaws.com",
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "postgres",
+    "password": "123123123",
+    "database": "nodedb_production",
+    "host": "sweettimedb.cwhwlslobxo9.ap-northeast-1.rds.amazonaws.com",
     "dialect": "postgres"
   }
 }

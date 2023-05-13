@@ -62,6 +62,7 @@ exports.login = {
 
       res
         .cookie('access_token', token, {
+          origin: process.env['ORIGIN'],
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production'
         })

@@ -1,9 +1,11 @@
 const { Sequelize } = require('sequelize')
+const env = process.env.NODE_ENV || 'development'
+const config = require(__dirname + '/../config/config.json')[env]
 
 let db = null
-db = new Sequelize(process.env['DEV_DATABASE_NAME'], process.env['DEV_DATABASE_USERNAME'], null, {
-  host: process.env['DEV_DATABASE_HOST'],
-  dialect: 'postgres'
+db = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect
 })
 
 const testDBConnection = async () => {
