@@ -125,6 +125,7 @@ exports.profile = {
           name: user.name,
           nickName: user.nickName,
           gender: user.gender,
+          phone: user.phone,
           birthday: new Date(user.birthday).getTime(),
           email: user.email,
           address: user.address
