@@ -10,10 +10,14 @@
     "dev": "yarn nodemon app.js",
     "test": "jest",
     "db:init": "npx sequelize-cli init",
-    "db:migrate": "npx sequelize-cli db:migrate",
-    "db:undo": "npx sequelize-cli db:migrate:undo",
-    "db:undo:all": "npx sequelize-cli db:migrate:undo:all",
-    "db:status": "npx sequelize-cli db:migrate:status"
+    "db:migrate": "npx sequelize-cli db:migrate --env development",
+    "db:undo": "npx sequelize-cli db:migrate:undo --env development",
+    "db:undo:all": "npx sequelize-cli db:migrate:undo:all --env development",
+    "db:status": "npx sequelize-cli db:migrate:status --env development",
+    "db:migrate:prod": "npx sequelize-cli db:migrate --env production",
+    "db:undo:prod": "npx sequelize-cli db:migrate:undo --env production",
+    "db:undo:all:prod": "npx sequelize-cli db:migrate:undo:all --env production",
+    "db:status:prod": "npx sequelize-cli db:migrate:status --env production"
   },
   "devDependencies": {
     "eslint": "^8.39.0",
