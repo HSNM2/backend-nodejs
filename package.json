@@ -7,7 +7,7 @@
   "author": "HSNM2",
   "license": "MIT",
   "scripts": {
-    "dev": "yarn nodemon app.js --env development",
+    "dev": "yarn nodemon app.js",
     "test": "jest",
     "db:init": "npx sequelize-cli init",
     "db:migrate": "npx sequelize-cli db:migrate --env development",
