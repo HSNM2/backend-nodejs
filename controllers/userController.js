@@ -5,6 +5,10 @@ const { errorTemplateFun } = require('../src/utils/template')
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
 const { generateUserId } = require('../src/js/generate')
+const { identityValidate } = require('../src/js/validate')
+const { IDENTITY_VALUE } = require('../src/constants/identityMapping')
+
+const isTeacher = identityValidate(IDENTITY_VALUE.Teacher)
 
 exports.register = {
   post: async (req, res) => {
@@ -225,6 +229,60 @@ exports.tag = {
         status: true,
         data: '收藏刪除成功'
       })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.identity = {
+  post: async (req, res) => {
+    const { identityType } = req.body
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: '查無此使用者'
+        })
+      }
+
+      let identity = []
+      if (user.identity) {
+        identity = JSON.parse(user.identity)
+
+        for (let i = 0; i < identity.length; i++) {
+          if (isTeacher(identity[i])) {
+            return res.json({
+              status: false,
+              data: '你已經是老師了！'
+            })
+          }
+        }
+      }
+
+      identity.push(identityType)
+
+      const result = await User.update(
+        {
+          identity: JSON.stringify(identity)
+        },
+        {
+          where: {
+            id: userId
+          }
+        }
+      )
+
+      if (result) {
+        res.json({
+          status: true,
+          data: '註冊老師成功'
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))

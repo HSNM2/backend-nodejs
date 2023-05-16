@@ -34,6 +34,9 @@ User = db.define('users', {
   },
   address: {
     type: DataTypes.STRING
+  },
+  identity: {
+    type: DataTypes.STRING
   }
 })
 

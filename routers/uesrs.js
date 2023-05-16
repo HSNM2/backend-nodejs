@@ -13,5 +13,6 @@ router.get('/profile', [authJwt.verifyToken], userController.profile.get)
 router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
 router.post('/tag/:courseId', [authJwt.verifyToken], userController.tag.post)
 router.delete('/tag/:courseId', [authJwt.verifyToken], userController.tag.delete)
+router.post('/identity', [authJwt.verifyToken], userController.identity.post)
 
 module.exports = router
