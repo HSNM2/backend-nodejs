@@ -237,6 +237,27 @@ exports.tag = {
 }
 
 exports.identity = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: '查無此使用者'
+        })
+      }
+
+      return res.json({
+        status: true,
+        data: JSON.parse(user.identity)
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
   post: async (req, res) => {
     const { identityType } = req.body
     try {
