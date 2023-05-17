@@ -16,7 +16,7 @@ module.exports = {
       originPrice: {
         type: Sequelize.INTEGER
       },
-      name: {
+      title: {
         type: Sequelize.STRING
       },
       tag: {
@@ -33,6 +33,31 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT
+      },
+      courseStatus: {
+        type: Sequelize.STRING
+      },
+      type: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      category: {
+        type: Sequelize.STRING
+      },
+      provider: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      buyers: {
+        type: Sequelize.INTEGER
+      },
+      totalTime: {
+        type: Sequelize.FLOAT
+      },
+      isPublish: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        autoIncrement: false
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -1,61 +1,63 @@
 const { Course } = require('../models/courses')
+const { RatingSummary } = require('../models/rating_summarys')
 const { errorTemplateFun } = require('../src/utils/template')
 
 // 取得課程列表
 exports.courses = {
   get: async (req, res) => {
     try {
-      const { page = 1, limit = 20 } = req.query
-
-      const offset = (page - 1) * limit
-
-      const { count, rows } = await Course.findAndCountAll({
+      const courseData = await Course.findAll({
+        where: { isPublish: true },
         attributes: [
           'id',
-          'name',
+          'title',
+          'subTitle',
           'image_path',
           'price',
           'originPrice',
           'link',
-          'teacher',
+          'provider',
           'tag',
           'buyers',
           'totalTime',
-          [Sequelize.fn('AVG', Sequelize.col('rating')), 'avgRating'],
-          [Sequelize.fn('COUNT', Sequelize.col('rating')), 'ratingCount']
+          'courseStatus',
+          'type',
+          'category'
         ],
-        limit,
-        offset
+        include: [
+          {
+            model: RatingSummary,
+            attributes: ['avgRating', 'countRating']
+          }
+        ]
       })
 
-      const courses = rows.map((course) => {
+      const courses = courseData.map((course) => {
         return {
           id: course.id,
-          name: course.name,
+          title: course.title,
+          subTittle: course.subtitle,
           image_path: course.image_path,
-          rating: {
-            average: course.getDataValue('avgRating'), // 取得計算的平均評分
-            count: course.getDataValue('ratingCount') // 取得評分人數
-          },
           price: course.price,
           originPrice: course.originPrice,
           link: course.link,
-          teacher: course.teacher,
+          provider: course.provider,
           tag: course.tag,
           buyers: course.buyers,
-          totalTime: course.totalTime
+          totalTime: course.totalTime,
+          courseStatus: course.courseStatus,
+          type: course.type,
+          category: course.category,
+          rating: {
+            avgRating: course.rating_summary.avgRating,
+            countRating: course.rating_summary.countRating
+          }
         }
       })
 
       res.json({
         success: true,
-        data: courses,
-        pagination: {
-          page,
-          limit,
-          totalPages: Math.ceil(count / limit),
-          totalCourses: count
-        }
+        data: courses
       })
     } catch (error) {
       console.error(error)

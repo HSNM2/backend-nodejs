@@ -5,13 +5,18 @@ console.log(`=== Courses Model Create ===`)
 
 let Course = null
 Course = db.define('courses', {
+  id: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    primaryKey: true
+  },
   price: {
     type: DataTypes.INTEGER
   },
   originPrice: {
     type: DataTypes.INTEGER
   },
-  name: {
+  title: {
     type: DataTypes.STRING
   },
   tag: {
@@ -28,6 +33,31 @@ Course = db.define('courses', {
   },
   description: {
     type: DataTypes.TEXT
+  },
+  courseStatus: {
+    type: DataTypes.STRING
+  },
+  type: {
+    allowNull: false,
+    type: DataTypes.STRING
+  },
+  category: {
+    type: DataTypes.STRING
+  },
+  provider: {
+    allowNull: false,
+    type: DataTypes.STRING
+  },
+  buyers: {
+    type: DataTypes.INTEGER
+  },
+  totalTime: {
+    type: DataTypes.FLOAT
+  },
+  isPublish: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 })
 
