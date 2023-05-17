@@ -34,8 +34,15 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "module-alias": "^2.2.2",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.31.0"
+  },
+  "_moduleAliases": {
+    "controllers": "controllers",
+    "middleware": "middleware",
+    "routers": "routers",
+    "src": "src"
   }
 }
