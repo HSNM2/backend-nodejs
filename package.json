@@ -43,6 +43,7 @@
     "controllers": "controllers",
     "middleware": "middleware",
     "routers": "routers",
-    "src": "src"
+    "src": "src",
+    "models": "models"
   }
 }
