@@ -132,7 +132,8 @@ exports.profile = {
           phone: user.phone,
           birthday: new Date(user.birthday).getTime(),
           email: user.email,
-          address: user.address
+          address: user.address,
+          identity: user.identity
         }
       })
     } catch (error) {
