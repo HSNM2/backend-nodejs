@@ -6,9 +6,9 @@ let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
 const { generateUserId } = require('../src/js/generate')
 const { identityValidate } = require('../src/js/validate')
-const { IDENTITY_VALUE } = require('../src/constants/identityMapping')
+const { IDENTITY } = require('../src/constants/identityMapping')
 
-const isTeacher = identityValidate(IDENTITY_VALUE.Teacher)
+const isTeacher = identityValidate(IDENTITY.Teacher)
 
 exports.register = {
   post: async (req, res) => {
