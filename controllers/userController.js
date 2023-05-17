@@ -6,9 +6,9 @@ let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
 const { generateUserId } = require('../src/js/generate')
 const { identityValidate } = require('../src/js/validate')
-const { IDENTITY_VALUE } = require('../src/constants/identityMapping')
+const { IDENTITY } = require('../src/constants/identityMapping')
 
-const isTeacher = identityValidate(IDENTITY_VALUE.Teacher)
+const isTeacher = identityValidate(IDENTITY.Teacher)
 
 exports.register = {
   post: async (req, res) => {
@@ -237,6 +237,27 @@ exports.tag = {
 }
 
 exports.identity = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: '查無此使用者'
+        })
+      }
+
+      return res.json({
+        status: true,
+        data: JSON.parse(user.identity)
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
   post: async (req, res) => {
     const { identityType } = req.body
     try {
