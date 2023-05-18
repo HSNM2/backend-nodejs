@@ -1,13 +1,13 @@
-const { User } = require('../models/users')
-const { Course } = require('../models/courses')
-const { UserFavoriteAssociation } = require('../models/user_favorite_associations')
-const { errorTemplateFun } = require('../src/utils/template')
+const { User } = require('models/users')
+const { Course } = require('models/courses')
+const { UserFavoriteAssociation } = require('models/user_favorite_associations')
+const { errorTemplateFun } = require('src/utils/template')
 
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
-const { generateUserId } = require('../src/js/generate')
-const { identityValidate } = require('../src/js/validate')
-const { IDENTITY } = require('../src/constants/identityMapping')
+const { generateUserId } = require('src/js/generate')
+const { identityValidate } = require('src/js/validate')
+const { IDENTITY } = require('src/constants/identityMapping')
 
 const isTeacher = identityValidate(IDENTITY.Teacher)
 
