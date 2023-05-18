@@ -1,5 +1,6 @@
 const { User } = require('models/users')
 const { Course } = require('models/courses')
+const { UserFavoriteAssociation } = require('models/user_favorite_associations')
 const { errorTemplateFun } = require('src/utils/template')
 
 let jwt = require('jsonwebtoken')
@@ -208,14 +209,36 @@ exports.courses = {
   }
 }
 
-exports.tag = {
+exports.favorite = {
   post: async (req, res) => {
     try {
       const { courseId } = req.params
+      const userId = req.userId
+
+      const userFavorite = await UserFavoriteAssociation.findOne({
+        where: {
+          favorite: true,
+          userId,
+          courseId
+        }
+      })
+
+      if (userFavorite) {
+        return res.json({
+          status: false,
+          message: '已將該課程加入收藏'
+        })
+      }
+
+      await UserFavoriteAssociation.create({
+        favorite: true,
+        userId,
+        courseId
+      })
 
       res.json({
         status: true,
-        data: '收藏新增成功'
+        message: '收藏新增成功'
       })
     } catch (error) {
       console.error(error)
@@ -225,10 +248,28 @@ exports.tag = {
   delete: async (req, res) => {
     try {
       const { courseId } = req.params
+      const userId = req.userId
+
+      const userFavorite = await UserFavoriteAssociation.findOne({
+        where: {
+          favorite: true,
+          userId,
+          courseId
+        }
+      })
+
+      if (!userFavorite) {
+        return res.json({
+          status: false,
+          message: '該課程未被收藏'
+        })
+      }
+
+      await userFavorite.destroy()
 
       res.json({
         status: true,
-        data: '收藏刪除成功'
+        message: '收藏刪除成功'
       })
     } catch (error) {
       console.error(error)

@@ -21,8 +21,8 @@ router.post(
   pictureUpload.post
 )
 
-router.post('/tag/:courseId', [authJwt.verifyToken], userController.tag.post)
-router.delete('/tag/:courseId', [authJwt.verifyToken], userController.tag.delete)
+router.post('/tag/:courseId', [authJwt.verifyToken], userController.favorite.post)
+router.delete('/tag/:courseId', [authJwt.verifyToken], userController.favorite.delete)
 router.get('/identity', [authJwt.verifyToken], userController.identity.get)
 router.post('/identity', [authJwt.verifyToken], userController.identity.post)
 
