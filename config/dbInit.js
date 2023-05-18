@@ -9,9 +9,12 @@ const { ClassFaqQuestion } = require('../models/class_faq_questions')
 const { RatingSummary } = require('../models/rating_summarys')
 const { RatingPersonal } = require('../models/rating_personals')
 const { UserCourseAssociation } = require('../models/user_course_associations')
+const { UserFavoriteAssociation } = require('../models/user_favorite_associations')
 
 User.belongsToMany(Course, { through: UserCourseAssociation })
 Course.belongsToMany(User, { through: UserCourseAssociation })
+User.belongsToMany(Course, { through: UserFavoriteAssociation })
+Course.belongsToMany(User, { through: UserFavoriteAssociation })
 
 // foreignKey 是 migrations 的key
 // 與課程資訊關聯
