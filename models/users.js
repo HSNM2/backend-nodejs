@@ -37,6 +37,9 @@ User = db.define('users', {
   },
   identity: {
     type: DataTypes.STRING
+  },
+  avatarImagePath: {
+    type: DataTypes.STRING
   }
 })
 
