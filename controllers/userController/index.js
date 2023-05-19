@@ -134,7 +134,8 @@ exports.profile = {
           birthday: new Date(user.birthday).getTime(),
           email: user.email,
           address: user.address,
-          identity: user.identity
+          identity: user.identity,
+          avatarImagePath: user.avatarImagePath
         }
       })
     } catch (error) {
