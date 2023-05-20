@@ -8,6 +8,7 @@ let bcrypt = require('bcryptjs')
 const { generateUserId } = require('src/js/generate')
 const { identityValidate } = require('src/js/validate')
 const { IDENTITY } = require('src/constants/identityMapping')
+const { USER_AVATAR_FOLDER_PREFIX } = require('src/js/url')
 
 const isTeacher = identityValidate(IDENTITY.Teacher)
 
@@ -135,7 +136,7 @@ exports.profile = {
           email: user.email,
           address: user.address,
           identity: user.identity,
-          avatarImagePath: user.avatarImagePath
+          avatarImagePath: `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${user.avatarImagePath}`
         }
       })
     } catch (error) {
