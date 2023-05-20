@@ -136,7 +136,9 @@ exports.profile = {
           email: user.email,
           address: user.address,
           identity: user.identity,
-          avatarImagePath: `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${user.avatarImagePath}`
+          avatarImagePath: user.avatarImagePath
+            ? `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${user.avatarImagePath}`
+            : null
         }
       })
     } catch (error) {
