@@ -1,3 +1,4 @@
+const { User } = require('../models/users')
 const { Course } = require('../models/courses')
 const { Chapter } = require('../models/chapters')
 const { Lesson } = require('../models/lessons')
@@ -44,6 +45,7 @@ exports.course = {
           }
         ]
       })
+      classInquiryData.sort((a, b) => a.id - b.id)
 
       // 取得常見問題
       const classFaqData = await ClassFaq.findAll({
@@ -108,6 +110,71 @@ exports.course = {
         message: '取完課程成功',
         data: responseData
       })
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
+
+exports.inquiryAsk = {
+  post: async (req, res) => {
+    try {
+      const courseId = req.params.courseid
+      const { content } = req.body
+      const { userId } = req
+
+      const user = await User.findOne({
+        where: { id: userId },
+        attributes: ['name']
+      })
+
+      if (!user) {
+        return res.status(404).json({ message: '請先登入，如有其他問題請聯絡客服。' })
+      }
+
+      await PreClassInquiry.create({
+        courseId: courseId,
+        content: content,
+        name: user.name
+      })
+
+      res.json({
+        status: true,
+        message: '提問成功'
+      })
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
+
+exports.inquiryAnswer = {
+  post: async (req, res) => {
+    const inquiryId = req.params.inquiryid
+    const { content } = req.body
+    const { userId } = req
+
+    const user = await User.findOne({
+      where: { id: userId },
+      attributes: ['name']
+    })
+
+    if (!user) {
+      return res.status(404).json({ message: '請先登入，如有其他問題請聯絡客服。' })
+    }
+
+    await PreClassInquiryRes.create({
+      inquiriesId: inquiryId,
+      content: content,
+      name: user.name
+    })
+    res.json({
+      status: true,
+      message: '回覆成功'
+    })
+    try {
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
