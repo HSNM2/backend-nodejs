@@ -38,6 +38,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('rating_summary')
+    await queryInterface.dropTable('rating_summarys')
   }
 }
