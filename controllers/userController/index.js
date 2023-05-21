@@ -137,7 +137,9 @@ exports.profile = {
           address: user.address,
           identity: user.identity,
           avatarImagePath: user.avatarImagePath
-            ? `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${user.avatarImagePath}`
+            ? process.env.NODE_ENV === 'development'
+              ? `http://localhost:${process.env.PORT || 3002}/static/${user.avatarImagePath}`
+              : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${user.avatarImagePath}`
             : null
         }
       })
