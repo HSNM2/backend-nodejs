@@ -40,7 +40,7 @@ module.exports = {
       } else {
         const originAvatarImagePath = user.avatarImagePath
         if (originAvatarImagePath) {
-          const filePath = path.join(rootDir, 'uploads', originAvatarImagePath)
+          const filePath = path.join(rootDir, 'uploads/avatar', originAvatarImagePath)
           await unlinkAsync(filePath)
         }
         fileName = file.filename
@@ -64,7 +64,7 @@ module.exports = {
             message: '上傳大頭貼成功',
             imagePath:
               process.env.NODE_ENV === 'development'
-                ? `http://localhost:${process.env.PORT || 3002}/static/${fileName}`
+                ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${fileName}`
                 : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${fileName}`
           }
         })
@@ -106,13 +106,19 @@ module.exports = {
     }
   },
   uploadMiddleware: multer({
-    storage: multer.diskStorage({
-      destination: 'uploads/',
-      filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop())
-      }
-    }),
+    storage:
+      process.env.NODE_ENV === 'development'
+        ? multer.diskStorage({
+            destination: 'uploads/avatar',
+            filename: function (req, file, cb) {
+              const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+              cb(
+                null,
+                file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop()
+              )
+            }
+          })
+        : multer.memoryStorage(),
     fileFilter: fileFilter,
     limits: { fileSize: 100000000 }
   })
