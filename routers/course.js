@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const courseController = require('../controllers/courseController')
+const courseController = require('controllers/courseController')
 
 const { verifySignUp, authJwt } = require('middleware')
 

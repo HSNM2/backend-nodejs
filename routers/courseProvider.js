@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const courseProviderController = require('../controllers/courseProviderController')
+const courseProviderController = require('controllers/courseProviderController')
 const API_PREFIX = '/course'
 
 router.get(`${API_PREFIX}s`, courseProviderController.courses.get)
