@@ -24,7 +24,7 @@ exports.course = {
       const {
         price,
         originPrice,
-        name,
+        title,
         tag,
         image_path,
         link,
@@ -39,7 +39,7 @@ exports.course = {
       const result = await Course.create({
         price,
         originPrice,
-        name,
+        title,
         tag: tagData,
         image_path,
         link,

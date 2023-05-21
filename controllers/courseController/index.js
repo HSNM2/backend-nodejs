@@ -101,7 +101,8 @@ exports.course = {
         rating: {
           avgRating: ratingSummary ? ratingSummary.avgRating : 0,
           countRating: ratingSummary ? ratingSummary.countRating : 0,
-          ratings: ratingSummary.rating_personals ? ratingSummary.rating_personals : []
+          ratings:
+            ratingSummary && ratingSummary.rating_personals ? ratingSummary.rating_personals : []
         }
       }
 
