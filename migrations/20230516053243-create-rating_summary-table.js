@@ -7,7 +7,8 @@ module.exports = {
       id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       avgRating: {
         type: Sequelize.DECIMAL(10, 1)
@@ -37,6 +38,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('rating_summary')
+    await queryInterface.dropTable('rating_summarys')
   }
 }

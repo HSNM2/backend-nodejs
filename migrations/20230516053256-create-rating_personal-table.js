@@ -7,7 +7,8 @@ module.exports = {
       id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       name: {
         allowNull: false,
@@ -46,6 +47,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('rating_personal')
+    await queryInterface.dropTable('rating_personals')
   }
 }

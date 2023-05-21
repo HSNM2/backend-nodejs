@@ -21,19 +21,32 @@ exports.course = {
   },
   post: async (req, res) => {
     try {
-      const { price, originPrice, name, tag, image_path, link, subTitle, description } = req.body
+      const {
+        price,
+        originPrice,
+        title,
+        tag,
+        image_path,
+        link,
+        subTitle,
+        description,
+        type,
+        provider
+      } = req.body
 
       const tagData = tag.join()
 
       const result = await Course.create({
         price,
         originPrice,
-        name,
+        title,
         tag: tagData,
         image_path,
         link,
         subTitle,
-        description
+        description,
+        type,
+        provider
       })
 
       res.json({
