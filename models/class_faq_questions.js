@@ -5,11 +5,6 @@ console.log(`=== Class_Faq_Questions Model Create ===`)
 
 let ClassFaqQuestion = null
 ClassFaqQuestion = db.define('class_faq_questions', {
-  id: {
-    allowNull: false,
-    type: DataTypes.STRING,
-    primaryKey: true
-  },
   content: {
     allowNull: false,
     type: DataTypes.STRING

@@ -5,11 +5,6 @@ console.log(`=== Lesson Model Create ===`)
 
 let Lesson = null
 Lesson = db.define('lessons', {
-  id: {
-    allowNull: false,
-    type: DataTypes.STRING,
-    primaryKey: true
-  },
   title: {
     allowNull: false,
     type: DataTypes.STRING

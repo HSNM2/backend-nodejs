@@ -5,11 +5,6 @@ console.log(`=== Courses Model Create ===`)
 
 let Course = null
 Course = db.define('courses', {
-  id: {
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    primaryKey: true
-  },
   price: {
     type: DataTypes.INTEGER
   },
