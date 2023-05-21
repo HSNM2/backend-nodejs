@@ -21,6 +21,7 @@ const corsOption = {
 app.use(cookieParser())
 app.use(cors(corsOption))
 app.use(express.json())
+app.use('/static', express.static(__dirname + '/uploads'))
 
 const API_PREFIX = '/api'
 app.use(`${API_PREFIX}`, commonRouter)
