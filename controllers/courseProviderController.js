@@ -1,5 +1,5 @@
-const { Course } = require('../models/courses')
-const { errorTemplateFun } = require('../src/utils/template')
+const { Course } = require('models/courses')
+const { errorTemplateFun } = require('src/utils/template')
 
 exports.courses = {
   get: async () => {}

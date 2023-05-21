@@ -1,6 +1,6 @@
-const { User } = require('../models/users')
-const { Course } = require('../models/courses')
-const { errorTemplateFun } = require('../src/utils/template')
+const { User } = require('models/users')
+const { Course } = require('models/courses')
+const { errorTemplateFun } = require('src/utils/template')
 
 exports.checkout = {
   post: async (req, res) => {

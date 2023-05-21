@@ -1,6 +1,6 @@
-const { Course } = require('../models/courses')
-const { RatingSummary } = require('../models/rating_summarys')
-const { errorTemplateFun } = require('../src/utils/template')
+const { Course } = require('models/courses')
+const { RatingSummary } = require('models/rating_summarys')
+const { errorTemplateFun } = require('src/utils/template')
 
 // 取得課程列表
 exports.courses = {
