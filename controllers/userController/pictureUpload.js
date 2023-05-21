@@ -106,13 +106,19 @@ module.exports = {
     }
   },
   uploadMiddleware: multer({
-    storage: multer.diskStorage({
-      destination: 'uploads/',
-      filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop())
-      }
-    }),
+    storage:
+      process.env.NODE_ENV === 'development'
+        ? multer.diskStorage({
+            destination: 'uploads/',
+            filename: function (req, file, cb) {
+              const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+              cb(
+                null,
+                file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop()
+              )
+            }
+          })
+        : multer.memoryStorage(),
     fileFilter: fileFilter,
     limits: { fileSize: 100000000 }
   })
