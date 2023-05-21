@@ -3,6 +3,7 @@ const router = express.Router()
 const userController = require('controllers/userController')
 const pictureUpload = require('controllers/userController/pictureUpload')
 const { verifySignUp, authJwt } = require('middleware')
+const multer = require('multer')
 
 router.post('/register', [verifySignUp.checkDuplicateEmail], userController.register.post)
 router.post('/login', userController.login.post)
@@ -13,7 +14,7 @@ router.get('/profile', [authJwt.verifyToken], userController.profile.get)
 router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
 router.post(
   '/profile/pic/upload',
-  [authJwt.verifyToken, pictureUpload.uploadMiddleware.single('file')],
+  [authJwt.verifyToken, pictureUpload.uploadMiddleware.single('avatar')],
   pictureUpload.post
 ),
   router.delete('/profile/pic/upload', [authJwt.verifyToken], pictureUpload.delete)
