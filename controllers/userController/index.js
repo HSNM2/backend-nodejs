@@ -1,6 +1,6 @@
 const { User } = require('models/users')
 const { Course } = require('models/courses')
-const { UserFavoriteAssociation } = require('models/user_favorite_associations')
+const { UserFavorite } = require('models/user_favorites')
 const { errorTemplateFun } = require('src/utils/template')
 
 let jwt = require('jsonwebtoken')
@@ -221,25 +221,37 @@ exports.favorite = {
       const { courseId } = req.params
       const userId = req.userId
 
-      const userFavorite = await UserFavoriteAssociation.findOne({
+      const userFavorite = await UserFavorite.findOne({
         where: {
-          favorite: true,
-          userId,
-          courseId
+          userId
         }
       })
 
       if (userFavorite) {
+        const favoriteCourses = userFavorite.favorite || ''
+        if (favoriteCourses.includes(courseId)) {
+          return res.json({
+            status: false,
+            message: '已將該課程加入收藏'
+          })
+        }
+
+        const updatedFavoriteCourses = favoriteCourses + ',' + courseId
+
+        await userFavorite.update({
+          favorite: updatedFavoriteCourses
+        })
+
         return res.json({
-          status: false,
-          message: '已將該課程加入收藏'
+          status: true,
+          message: '收藏新增成功'
         })
       }
 
-      await UserFavoriteAssociation.create({
-        favorite: true,
-        userId,
-        courseId
+      const favoriteData = courseId.toString()
+      await UserFavorite.create({
+        favorite: favoriteData,
+        userId
       })
 
       res.json({
@@ -256,26 +268,62 @@ exports.favorite = {
       const { courseId } = req.params
       const userId = req.userId
 
-      const userFavorite = await UserFavoriteAssociation.findOne({
+      const userFavorite = await UserFavorite.findOne({
         where: {
-          favorite: true,
-          userId,
-          courseId
+          userId
         }
       })
 
-      if (!userFavorite) {
+      if (userFavorite) {
+        let favoriteCourses = userFavorite.favorite || ''
+
+        if (!favoriteCourses.includes(courseId)) {
+          return res.json({
+            status: false,
+            message: '該課程未在收藏中'
+          })
+        }
+
+        favoriteCourses = favoriteCourses
+          .split(',')
+          .filter((id) => id !== courseId)
+          .join(',')
+
+        await userFavorite.update({
+          favorite: favoriteCourses
+        })
+
         return res.json({
-          status: false,
-          message: '該課程未被收藏'
+          status: true,
+          message: '已從收藏中刪除該課程'
         })
       }
 
-      await userFavorite.destroy()
+      return res.json({
+        status: false,
+        message: '刪除失敗'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
 
-      res.json({
+exports.getFavorite = {
+  get: async (req, res) => {
+    try {
+      const userId = req.userId
+
+      const userFavorite = await UserFavorite.findOne({
+        where: { userId },
+        attributes: ['favorite']
+      })
+
+      return res.json({
         status: true,
-        message: '收藏刪除成功'
+        message: '取得收藏成功',
+        data: userFavorite.favorite || ''
       })
     } catch (error) {
       console.error(error)
