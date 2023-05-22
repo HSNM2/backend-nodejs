@@ -7,7 +7,7 @@ exports.courses = {
   get: async (req, res) => {
     try {
       const page = req.query.page || 1
-      const limit = 20
+      const limit = req.query.limit || 20
       const offset = (page - 1) * limit
 
       const courseData = await Course.findAndCountAll({
@@ -38,7 +38,7 @@ exports.courses = {
         limit,
         offset
       })
-      console.log(courseData.rows)
+
       const courses = courseData.rows.map((course) => {
         return {
           id: course.id,
