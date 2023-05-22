@@ -16,8 +16,10 @@ exports.register = {
   post: async (req, res) => {
     const { email, password } = req.body
     try {
+      const id = generateUserId()
       const user = await User.create({
-        id: generateUserId(),
+        id,
+        name: `custom-${id}`,
         email: email,
         password: bcrypt.hashSync(password, 10)
       })
