@@ -3,7 +3,6 @@ const router = express.Router()
 const userController = require('controllers/userController')
 const pictureUpload = require('controllers/userController/pictureUpload')
 const { verifySignUp, authJwt } = require('middleware')
-const multer = require('multer')
 
 router.post('/register', [verifySignUp.checkDuplicateEmail], userController.register.post)
 router.post('/login', userController.login.post)

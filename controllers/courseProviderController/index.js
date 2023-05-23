@@ -33,8 +33,6 @@ exports.courses = {
           course: resultCourse
         }
       })
-
-      console.log(`courses: `, courses)
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
