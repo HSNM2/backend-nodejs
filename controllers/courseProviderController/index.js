@@ -47,8 +47,7 @@ exports.course = {
     try {
       const course = await Course.findOne({
         where: {
-          id: req.params.courseid,
-          teacherId: req.userId
+          id: req.params.courseid
         }
       })
 
