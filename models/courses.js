@@ -53,6 +53,9 @@ Course = db.define('courses', {
     allowNull: false,
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  teacherId: {
+    type: DataTypes.STRING
   }
 })
 
