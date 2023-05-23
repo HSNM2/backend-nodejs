@@ -45,10 +45,17 @@ exports.courses = {
 exports.course = {
   get: async (req, res) => {
     try {
-      res.json({
+      const course = await Course.findOne({
+        where: {
+          id: req.params.courseid,
+          teacherId: req.userId
+        }
+      })
+
+      return res.json({
         status: true,
         data: {
-          id: `course get! course ID: ${req.params.courseid}`
+          course
         }
       })
     } catch (error) {
