@@ -23,5 +23,6 @@ router.delete('/tag/:courseId', [authJwt.verifyToken], userController.favorite.d
 router.get('/tag/userFavorite', [authJwt.verifyToken], userController.getFavorite.get)
 router.get('/identity', [authJwt.verifyToken], userController.identity.get)
 router.post('/identity', [authJwt.verifyToken], userController.identity.post)
+router.post('/ownedCourse/check', [authJwt.verifyToken], userController.ownedCourse.post)
 
 module.exports = router

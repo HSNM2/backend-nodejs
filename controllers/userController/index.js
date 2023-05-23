@@ -406,3 +406,39 @@ exports.identity = {
     }
   }
 }
+
+exports.ownedCourse = {
+  post: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.body.id
+
+      const user = await User.findByPk(userId, {
+        include: [
+          {
+            model: Course,
+            where: { id: courseId },
+            required: true
+          }
+        ]
+      })
+
+      if (user) {
+        return res.json({
+          status: true,
+          message: '擁有此課程',
+          isOwned: true
+        })
+      } else {
+        return res.json({
+          statue: true,
+          message: '尚未擁有此課程',
+          isOwned: false
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
