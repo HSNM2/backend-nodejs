@@ -4,7 +4,42 @@ const { checkUserExist } = require('src/utils/template')
 const { errorTemplateFun } = require('src/utils/template')
 
 exports.courses = {
-  get: async () => {}
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const user = await User.findOne({
+        where: {
+          id: userId
+        }
+      })
+      checkUserExist(user)
+
+      const courses = await Course.findAll({
+        where: {
+          teacherId: user.id
+        }
+      })
+
+      const resultCourse = courses.map((course) => ({
+        id: course.id,
+        title: course.title,
+        image_page: course.image_page,
+        isPublish: course.isPublish
+      }))
+
+      return res.json({
+        status: true,
+        data: {
+          course: resultCourse
+        }
+      })
+
+      console.log(`courses: `, courses)
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
 }
 
 exports.course = {
