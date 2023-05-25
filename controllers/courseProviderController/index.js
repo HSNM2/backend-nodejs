@@ -125,9 +125,7 @@ exports.course = {
       if (result) {
         res.json({
           status: true,
-          data: {
-            id: 'course patch!'
-          }
+          message: '修改課程成功'
         })
       }
     } catch (error) {
