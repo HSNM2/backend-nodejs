@@ -33,7 +33,6 @@ Course = db.define('courses', {
     type: DataTypes.STRING
   },
   type: {
-    allowNull: false,
     type: DataTypes.STRING
   },
   category: {
