@@ -60,5 +60,10 @@ router.patch(
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
   lesson.patch
 )
+router.delete(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  lesson.delete
+)
 
 module.exports = router
