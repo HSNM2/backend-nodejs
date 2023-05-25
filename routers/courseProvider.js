@@ -9,6 +9,7 @@ const API_PREFIX = '/course'
 
 router.get(`${API_PREFIX}s`, [authJwt.verifyToken], courseProviderController.courses.get)
 
+// course
 router.get(
   `${API_PREFIX}/:courseid`,
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
@@ -17,14 +18,16 @@ router.get(
 router.post(`${API_PREFIX}`, [authJwt.verifyToken], courseProviderController.course.post)
 router.patch(
   `${API_PREFIX}/:courseid`,
-  [authJwt.verifyToken],
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
   courseProviderController.course.patch
 )
 router.delete(
   `${API_PREFIX}/:courseid`,
-  [authJwt.verifyToken],
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
   courseProviderController.course.delete
 )
+
+// chapter
 router.get(
   `${API_PREFIX}/:courseid/chapter`,
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
@@ -45,6 +48,8 @@ router.delete(
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
   chapter.delete
 )
+
+// lesson
 router.get(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],

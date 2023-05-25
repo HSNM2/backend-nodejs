@@ -88,12 +88,48 @@ exports.course = {
   },
   patch: async (req, res) => {
     try {
-      res.json({
-        status: true,
-        data: {
-          id: 'course patch!'
-        }
+      const { courseid } = req.params
+      const {
+        title,
+        subTitle,
+        price,
+        originPrice,
+        tag,
+        image_path,
+        link,
+        description,
+        courseStatus,
+        type,
+        category
+      } = req.body
+
+      const course = await Course.findByPk(courseid)
+
+      const result = await course.update({
+        title,
+        subTitle,
+        price,
+        originPrice,
+        tag: tag.reduce(
+          (acc, cur, index, array) => `${acc}${cur}${index === array.length - 1 ? '' : ','}`,
+          ''
+        ),
+        image_path,
+        link,
+        description,
+        courseStatus,
+        type,
+        category
       })
+
+      if (result) {
+        res.json({
+          status: true,
+          data: {
+            id: 'course patch!'
+          }
+        })
+      }
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
