@@ -40,34 +40,74 @@ router.post(
 )
 router.patch(
   `${API_PREFIX}/:courseid/chapter/:chapterid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, verifyCourseProvide.checkChapterInCourse],
   chapter.patch
 )
 router.delete(
   `${API_PREFIX}/:courseid/chapter/:chapterid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, verifyCourseProvide.checkChapterInCourse],
   chapter.delete
 )
 
 // lesson
 router.get(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    verifyCourseProvide.checkLessonInChapter
+  ],
   lesson.get
 )
 router.post(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, lesson.uploadMiddleware.single('video')],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    lesson.uploadMiddleware.single('video')
+  ],
   lesson.post
+)
+router.post(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid/inStack`,
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    verifyCourseProvide.checkLessonInChapter
+  ],
+  lesson.inStack
+)
+router.post(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid/offStack`,
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    verifyCourseProvide.checkLessonInChapter
+  ],
+  lesson.offStack
 )
 router.patch(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    verifyCourseProvide.checkLessonInChapter
+  ],
   lesson.patch
 )
 router.delete(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse,
+    verifyCourseProvide.checkLessonInChapter
+  ],
   lesson.delete
 )
 

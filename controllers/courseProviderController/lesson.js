@@ -65,11 +65,12 @@ module.exports = {
         res.json({
           status: true,
           data: {
+            id: result.id,
             message: '新增單元成功',
             videoPath:
               process.env.NODE_ENV === 'development'
-                ? `http://localhost:${process.env.PORT || 3002}/static/video/${lesson.videoPath}`
-                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_VIDEO_FOLDER_PREFIX}/${lesson.videoPath}`
+                ? `http://localhost:${process.env.PORT || 3002}/static/video/${result.videoPath}`
+                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_VIDEO_FOLDER_PREFIX}/${result.videoPath}`
           }
         })
       }
@@ -112,6 +113,46 @@ module.exports = {
           data: {
             message: '刪除單元成功'
           }
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  inStack: async (req, res) => {
+    try {
+      const { lessonid } = req.params
+      const lesson = await Lesson.findByPk(lessonid)
+
+      const result = await lesson.update({
+        isPublish: true
+      })
+
+      if (result) {
+        res.json({
+          status: true,
+          message: '發布課程成功'
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  offStack: async (req, res) => {
+    try {
+      const { lessonid } = req.params
+      const lesson = await Lesson.findByPk(lessonid)
+
+      const result = lesson.update({
+        isPublished: false
+      })
+
+      if (result) {
+        res.json({
+          status: true,
+          message: '下架課程成功'
         })
       }
     } catch (error) {
