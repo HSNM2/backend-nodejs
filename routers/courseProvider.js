@@ -12,30 +12,40 @@ router.get(`${API_PREFIX}s`, [authJwt.verifyToken], courseProviderController.cou
 // course
 router.get(
   `${API_PREFIX}/:courseid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
   courseProviderController.course.get
 )
 router.post(`${API_PREFIX}`, [authJwt.verifyToken], courseProviderController.course.post)
 router.patch(
   `${API_PREFIX}/:courseid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
   courseProviderController.course.patch
 )
 router.delete(
   `${API_PREFIX}/:courseid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
   courseProviderController.course.delete
+)
+router.post(
+  `${API_PREFIX}/:courseid/inStack`,
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
+  courseProviderController.course.inStack
+)
+router.post(
+  `${API_PREFIX}/:courseid/offStack`,
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
+  courseProviderController.course.offStack
 )
 
 // chapter
 router.get(
   `${API_PREFIX}/:courseid/chapter`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
   chapter.get
 )
 router.post(
   `${API_PREFIX}/:courseid/chapter`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
   chapter.post
 )
 router.patch(
@@ -45,7 +55,12 @@ router.patch(
 )
 router.delete(
   `${API_PREFIX}/:courseid/chapter/:chapterid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, verifyCourseProvide.checkChapterInCourse],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse
+  ],
   chapter.delete
 )
 
@@ -54,6 +69,7 @@ router.get(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     verifyCourseProvide.checkLessonInChapter
@@ -64,6 +80,7 @@ router.post(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     lesson.uploadMiddleware.single('video')
@@ -74,6 +91,7 @@ router.post(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid/inStack`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     verifyCourseProvide.checkLessonInChapter
@@ -84,6 +102,7 @@ router.post(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid/offStack`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     verifyCourseProvide.checkLessonInChapter
@@ -94,6 +113,7 @@ router.patch(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     verifyCourseProvide.checkLessonInChapter
@@ -104,6 +124,7 @@ router.delete(
   `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
   [
     authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
     verifyCourseProvide.checkIsOwned,
     verifyCourseProvide.checkChapterInCourse,
     verifyCourseProvide.checkLessonInChapter

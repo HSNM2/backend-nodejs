@@ -17,6 +17,17 @@ const checkIsOwned = async (req, res, next) => {
   next()
 }
 
+const checkCourseExist = async (req, res, next) => {
+  const { courseid } = req.params
+  const course = await Course.findByPk(courseid)
+
+  if (!course) {
+    return res.status(403).json({ status: false, message: '所選的課程不存在' })
+  }
+
+  next()
+}
+
 const checkChapterInCourse = async (req, res, next) => {
   const { courseid, chapterid } = req.params
 
@@ -51,6 +62,7 @@ const checkLessonInChapter = async (req, res, next) => {
 
 module.exports = {
   checkIsOwned,
+  checkCourseExist,
   checkChapterInCourse,
   checkLessonInChapter
 }

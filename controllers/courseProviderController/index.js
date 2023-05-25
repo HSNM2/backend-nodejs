@@ -154,5 +154,47 @@ exports.course = {
       console.log(error)
       errorTemplateFun(error)
     }
+  },
+  inStack: async (req, res) => {
+    try {
+      const { courseid } = req.params
+
+      const course = await Course.findByPk(courseid)
+
+      const result = await course.update({
+        isPublish: true
+      })
+
+      if (result) {
+        res.json({
+          status: true,
+          message: '課程上架成功'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  },
+  offStack: async (req, res) => {
+    try {
+      const { courseid } = req.params
+
+      const course = await Course.findByPk(courseid)
+
+      const result = await course.update({
+        isPublish: false
+      })
+
+      if (result) {
+        res.json({
+          status: true,
+          message: '課程下架成功'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
   }
 }
