@@ -137,10 +137,19 @@ exports.course = {
   },
   delete: async (req, res) => {
     try {
+      const { courseid } = req.params
+      const course = await Course.findByPk(courseid)
+
+      const result = await course.destroy()
+
+      if (!result) {
+        throw new Error('請求失敗')
+      }
+
       res.json({
         status: true,
         data: {
-          id: 'course delete!'
+          id: '課程刪除'
         }
       })
     } catch (error) {
