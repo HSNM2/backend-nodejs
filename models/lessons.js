@@ -8,6 +8,12 @@ Lesson = db.define('lessons', {
   title: {
     allowNull: false,
     type: DataTypes.STRING
+  },
+  videoPath: {
+    type: DataTypes.STRING
+  },
+  isPublish: {
+    type: DataTypes.BOOLEAN
   }
 })
 
