@@ -9,6 +9,7 @@ const usersRouter = require('./routers/users')
 const courseProviderRouter = require('./routers/courseProvider')
 const coursesRouter = require('./routers/courses')
 const courseRouter = require('./routers/course')
+const cartRouter = require('./routers/cart')
 require('./config/dbInit')
 
 const corsOption = {
@@ -29,6 +30,7 @@ app.use(`${API_PREFIX}/user`, usersRouter)
 app.use(`${API_PREFIX}/courseProvider`, courseProviderRouter)
 app.use(`${API_PREFIX}/courses`, coursesRouter)
 app.use(`${API_PREFIX}/course`, courseRouter)
+app.use(`${API_PREFIX}/cart`, cartRouter)
 
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
