@@ -97,12 +97,23 @@ module.exports = {
   },
   delete: async (req, res) => {
     try {
-      res.json({
-        status: true,
-        data: {
-          message: '刪除單元成功'
+      const { chapterid, lessonid } = req.params
+
+      const result = await Lesson.destroy({
+        where: {
+          id: lessonid,
+          chapterId: chapterid
         }
       })
+
+      if (result) {
+        res.json({
+          status: true,
+          data: {
+            message: '刪除單元成功'
+          }
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
