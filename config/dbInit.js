@@ -18,7 +18,7 @@ UserFavorite.belongsTo(User, { foreignKey: 'userId' })
 
 // foreignKey 是 migrations 的key
 // 與課程資訊關聯
-Course.hasOne(Chapter, { foreignKey: 'courseId' })
+Course.hasMany(Chapter, { foreignKey: 'courseId' })
 Chapter.belongsTo(Course, { foreignKey: 'courseId' })
 Course.hasOne(PreClassInquiry, { foreignKey: 'courseId' })
 PreClassInquiry.belongsTo(Course, { foreignKey: 'courseId' })

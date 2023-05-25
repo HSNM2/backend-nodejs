@@ -119,7 +119,7 @@ module.exports = {
             }
           })
         : multer.memoryStorage(),
-    fileFilter: fileFilter,
+    fileFilter,
     limits: { fileSize: 100000000 }
   })
 }

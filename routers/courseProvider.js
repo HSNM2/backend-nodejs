@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const courseProviderController = require('controllers/courseProviderController')
 const chapter = require('controllers/courseProviderController/chapter')
+const lesson = require('controllers/courseProviderController/lesson')
 const { authJwt, verifyCourseProvide } = require('middleware')
 
 const API_PREFIX = '/course'
@@ -43,6 +44,21 @@ router.delete(
   `${API_PREFIX}/:courseid/chapter/:chapterid`,
   [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
   chapter.delete
+)
+router.get(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  lesson.get
+)
+router.post(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson`,
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, lesson.uploadMiddleware.single('video')],
+  lesson.post
+)
+router.patch(
+  `${API_PREFIX}/:courseid/chapter/:chapterid/lesson/:lessonid`,
+  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned],
+  lesson.patch
 )
 
 module.exports = router
