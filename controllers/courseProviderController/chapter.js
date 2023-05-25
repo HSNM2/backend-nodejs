@@ -14,7 +14,7 @@ module.exports = {
         include: [
           {
             model: Lesson,
-            attributes: ['id', 'title']
+            attributes: ['id', 'title', 'isPublish']
           }
         ]
       })
