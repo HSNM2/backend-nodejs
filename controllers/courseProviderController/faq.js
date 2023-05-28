@@ -1,14 +1,30 @@
 const { Course } = require('models/courses')
 const { ClassFaq } = require('models/class_faqs')
+const { ClassFaqQuestion } = require('models/class_faq_questions')
 const { errorTemplateFun } = require('src/utils/template')
 
 module.exports = {
   get: async (req, res) => {
     try {
-      return res.json({
-        success: true,
-        message: '獲取問題列表資訊'
+      const { courseid } = req.params
+
+      const faqs = await ClassFaq.findAll({
+        where: { courseId: courseid },
+        attributes: ['id', 'title'],
+        include: [
+          {
+            model: ClassFaqQuestion,
+            attributes: ['id', 'title', 'content', 'publish']
+          }
+        ]
       })
+
+      if (faqs) {
+        return res.json({
+          success: true,
+          data: faqs
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
