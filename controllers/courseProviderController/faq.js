@@ -1,4 +1,6 @@
 const { Course } = require('models/courses')
+const { ClassFaq } = require('models/class_faqs')
+const { errorTemplateFun } = require('src/utils/template')
 
 module.exports = {
   get: async (req, res) => {
@@ -35,10 +37,26 @@ module.exports = {
   },
   patch: async (req, res) => {
     try {
-      return res.json({
-        success: true,
-        message: '修改問題類別'
-      })
+      const { faqid } = req.params
+      const { title } = req.body
+
+      const result = await ClassFaq.update(
+        {
+          title
+        },
+        {
+          where: {
+            id: faqid
+          }
+        }
+      )
+
+      if (result) {
+        return res.json({
+          success: true,
+          message: '修改問題類別'
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
