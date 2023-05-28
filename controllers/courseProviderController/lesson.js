@@ -1,7 +1,5 @@
-const { Course } = require('models/courses')
 const { Chapter } = require('models/chapters')
 const { Lesson } = require('models/lessons')
-const { checkChapterExist } = require('../../src/utils/template')
 const multer = require('multer')
 
 const fileFilter = (req, file, cb) => {
@@ -15,7 +13,7 @@ const fileFilter = (req, file, cb) => {
 module.exports = {
   get: async (req, res) => {
     try {
-      const { courseid, chapterid, lessonid } = req.params
+      const { lessonid } = req.params
 
       const lesson = await Lesson.findByPk(lessonid, {
         attributes: ['id', 'title', 'videoPath', 'isPublish']
