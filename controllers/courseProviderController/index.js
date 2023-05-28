@@ -49,12 +49,25 @@ exports.course = {
         }
       })
 
-      return res.json({
-        status: true,
-        data: {
-          course
-        }
-      })
+      if (course) {
+        res.json({
+          status: true,
+          data: {
+            id: course.id,
+            price: course.price,
+            originPrice: course.originPrice,
+            title: course.title,
+            tag: course.tag,
+            image_page: course.image_page,
+            link: course.link,
+            subTitle: course.subTitle,
+            description: course.description,
+            courseStatus: course.courseStatus,
+            type: course.type,
+            category: course.category
+          }
+        })
+      }
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
