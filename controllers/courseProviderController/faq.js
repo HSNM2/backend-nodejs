@@ -1,3 +1,5 @@
+const { Course } = require('models/courses')
+
 module.exports = {
   get: async (req, res) => {
     try {
@@ -12,10 +14,20 @@ module.exports = {
   },
   post: async (req, res) => {
     try {
-      return res.json({
-        success: true,
-        message: '新增問題類別'
+      const { courseid } = req.params
+      const { title } = req.body
+
+      const course = await Course.findByPk(courseid)
+      const result = await course.createClass_faq({
+        title
       })
+
+      if (result) {
+        return res.json({
+          success: true,
+          message: '新增問題類別'
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
