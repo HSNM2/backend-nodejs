@@ -159,9 +159,7 @@ exports.course = {
 
       res.json({
         status: true,
-        data: {
-          id: '課程刪除'
-        }
+        message: '課程刪除成功'
       })
     } catch (error) {
       console.log(error)
