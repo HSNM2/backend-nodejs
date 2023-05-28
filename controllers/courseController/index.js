@@ -50,11 +50,11 @@ exports.course = {
       // 取得常見問題
       const classFaqData = await ClassFaq.findAll({
         where: { courseId },
-        attributes: ['id', 'title', 'publish'],
+        attributes: ['id', 'title'],
         include: [
           {
             model: ClassFaqQuestion,
-            attributes: ['id', 'content', 'publish']
+            attributes: ['id', 'title', 'content', 'publish']
           }
         ]
       })
@@ -91,9 +91,9 @@ exports.course = {
         faqs: classFaqData.map((faq) => ({
           id: faq.id,
           title: faq.title,
-          publish: faq.publish,
           questions: faq.class_faq_questions.map((question) => ({
             id: question.id,
+            title: question.title,
             content: question.content,
             publish: question.publish
           }))
