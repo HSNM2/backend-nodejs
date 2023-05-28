@@ -64,10 +64,18 @@ module.exports = {
   },
   delete: async (req, res) => {
     try {
-      return res.json({
-        success: true,
-        message: '刪除問題類別'
+      const { faqid } = req.params
+
+      const result = await ClassFaq.destroy({
+        where: { id: faqid }
       })
+
+      if (result) {
+        return res.json({
+          success: true,
+          message: '刪除問題類別'
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
