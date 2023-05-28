@@ -82,17 +82,13 @@ module.exports = {
       const { lessonid } = req.params
       const { title } = req.body
 
-      const lesson = await Lesson.findByPk(lessonid, {
-        attributes: ['id', 'title', 'videoPath']
-      })
-
       const result = await Lesson.update(
         {
           title
         },
         {
           where: {
-            id: lesson.id
+            id: lessonid
           }
         }
       )
