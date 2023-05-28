@@ -29,7 +29,7 @@ exports.course = {
         include: [
           {
             model: Lesson,
-            attributes: ['id', 'title']
+            attributes: ['id', 'title', 'videoPath']
           }
         ]
       })
@@ -78,7 +78,11 @@ exports.course = {
           title: chapter.title,
           lessons: chapter.lessons.map((lesson) => ({
             id: lesson.id,
-            title: lesson.title
+            title: lesson.title,
+            videoPath:
+              process.env.NODE_ENV === 'development'
+                ? `http://localhost:${process.env.PORT || 3002}/static/video/${lesson.videoPath}`
+                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_VIDEO_FOLDER_PREFIX}/${lesson.videoPath}`
           }))
         })),
         inquiries: classInquiryData.map((inquiry) => ({
