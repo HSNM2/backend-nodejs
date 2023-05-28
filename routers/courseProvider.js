@@ -3,6 +3,8 @@ const router = express.Router()
 const courseProviderController = require('controllers/courseProviderController')
 const chapter = require('controllers/courseProviderController/chapter')
 const lesson = require('controllers/courseProviderController/lesson')
+const faq = require('controllers/courseProviderController/faq')
+const question = require('controllers/courseProviderController/question')
 const { authJwt, verifyCourseProvide } = require('middleware')
 
 const API_PREFIX = '/course'
@@ -130,6 +132,40 @@ router.delete(
     verifyCourseProvide.checkLessonInChapter
   ],
   lesson.delete
+)
+
+// faq
+router.get(`${API_PREFIX}/:courseid/faq/`, [authJwt.verifyToken], faq.get)
+router.post(`${API_PREFIX}/:courseid/faq`, [authJwt.verifyToken], faq.post)
+router.patch(`${API_PREFIX}/:courseid/faq/:faqid`, [authJwt.verifyToken], faq.patch)
+router.delete(`${API_PREFIX}/:courseid/faq/:faqid`, [authJwt.verifyToken], faq.delete)
+
+// question
+router.get(
+  `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
+  [authJwt.verifyToken],
+  question.get
+)
+router.post(`${API_PREFIX}/:courseid/faq/:faqid/question`, [authJwt.verifyToken], question.post)
+router.post(
+  `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid/inStack`,
+  [authJwt.verifyToken],
+  question.inStack
+)
+router.post(
+  `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid/offStack`,
+  [authJwt.verifyToken],
+  question.offStack
+)
+router.patch(
+  `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
+  [authJwt.verifyToken],
+  question.patch
+)
+router.delete(
+  `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
+  [authJwt.verifyToken],
+  question.delete
 )
 
 module.exports = router
