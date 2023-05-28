@@ -81,16 +81,32 @@ module.exports = {
   },
   patch: async (req, res) => {
     try {
+      const { lessonid } = req.params
+      const { title } = req.body
+
       const lesson = await Lesson.findByPk(lessonid, {
         attributes: ['id', 'title', 'videoPath']
       })
 
-      res.json({
-        status: true,
-        data: {
-          message: '修改單元成功'
+      const result = await Lesson.update(
+        {
+          title
+        },
+        {
+          where: {
+            id: lesson.id
+          }
         }
-      })
+      )
+
+      if (result) {
+        res.json({
+          status: true,
+          data: {
+            message: '修改單元成功'
+          }
+        })
+      }
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
