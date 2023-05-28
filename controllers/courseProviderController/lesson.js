@@ -148,7 +148,7 @@ module.exports = {
       if (result) {
         res.json({
           status: true,
-          message: '發布課程成功'
+          message: '發布單元成功'
         })
       }
     } catch (error) {
@@ -162,13 +162,13 @@ module.exports = {
       const lesson = await Lesson.findByPk(lessonid)
 
       const result = lesson.update({
-        isPublished: false
+        isPublish: false
       })
 
       if (result) {
         res.json({
           status: true,
-          message: '下架課程成功'
+          message: '下架單元成功'
         })
       }
     } catch (error) {
