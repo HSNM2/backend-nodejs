@@ -1,5 +1,6 @@
 const { Course } = require('models/courses')
 const { Chapter } = require('models/chapters')
+const { ClassFaq } = require('models/class_faqs')
 
 const checkIsOwned = async (req, res, next) => {
   const { courseid } = req.params
@@ -30,9 +31,7 @@ const checkCourseExist = async (req, res, next) => {
 
 const checkChapterInCourse = async (req, res, next) => {
   const { courseid, chapterid } = req.params
-
   const course = await Course.findByPk(courseid)
-
   const result = await course.hasChapter(chapterid, {
     where: { courseId: courseid }
   })
@@ -46,9 +45,7 @@ const checkChapterInCourse = async (req, res, next) => {
 
 const checkLessonInChapter = async (req, res, next) => {
   const { chapterid, lessonid } = req.params
-
   const chapter = await Chapter.findByPk(chapterid)
-
   const result = await chapter.hasLesson(lessonid, {
     where: { chapterId: chapterid }
   })
@@ -60,9 +57,39 @@ const checkLessonInChapter = async (req, res, next) => {
   next()
 }
 
+const checkFaqInCourse = async (req, res, next) => {
+  const { courseid, faqid } = req.params
+  const course = await Course.findByPk(courseid)
+  const result = await course.hasClass_faq(faqid, {
+    where: { courseId: courseid }
+  })
+
+  if (!result) {
+    return res.status(403).json({ status: false, message: '此課程下無此問題類別' })
+  }
+
+  next()
+}
+
+const checkQuestionInFaq = async (req, res, next) => {
+  const { faqid, questionid } = req.params
+  const faq = await ClassFaq.findByPk(faqid)
+  const result = await faq.hasClass_faq_question(questionid, {
+    where: { faqId: faqid }
+  })
+
+  if (!result) {
+    return res.status(403).json({ status: false, message: '此類別下無此問題內容' })
+  }
+
+  next()
+}
+
 module.exports = {
   checkIsOwned,
   checkCourseExist,
   checkChapterInCourse,
-  checkLessonInChapter
+  checkLessonInChapter,
+  checkFaqInCourse,
+  checkQuestionInFaq
 }

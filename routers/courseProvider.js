@@ -52,7 +52,12 @@ router.post(
 )
 router.patch(
   `${API_PREFIX}/:courseid/chapter/:chapterid`,
-  [authJwt.verifyToken, verifyCourseProvide.checkIsOwned, verifyCourseProvide.checkChapterInCourse],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkChapterInCourse
+  ],
   chapter.patch
 )
 router.delete(
@@ -135,36 +140,101 @@ router.delete(
 )
 
 // faq
-router.get(`${API_PREFIX}/:courseid/faq/`, [authJwt.verifyToken], faq.get)
-router.post(`${API_PREFIX}/:courseid/faq`, [authJwt.verifyToken], faq.post)
-router.patch(`${API_PREFIX}/:courseid/faq/:faqid`, [authJwt.verifyToken], faq.patch)
-router.delete(`${API_PREFIX}/:courseid/faq/:faqid`, [authJwt.verifyToken], faq.delete)
+router.get(
+  `${API_PREFIX}/:courseid/faq`,
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
+  faq.get
+)
+router.post(
+  `${API_PREFIX}/:courseid/faq`,
+  [authJwt.verifyToken, verifyCourseProvide.checkCourseExist, verifyCourseProvide.checkIsOwned],
+  faq.post
+)
+router.patch(
+  `${API_PREFIX}/:courseid/faq/:faqid`,
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse
+  ],
+  faq.patch
+)
+router.delete(
+  `${API_PREFIX}/:courseid/faq/:faqid`,
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse
+  ],
+  faq.delete
+)
 
 // question
 router.get(
   `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
-  [authJwt.verifyToken],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse,
+    verifyCourseProvide.checkQuestionInFaq
+  ],
   question.get
 )
-router.post(`${API_PREFIX}/:courseid/faq/:faqid/question`, [authJwt.verifyToken], question.post)
+router.post(
+  `${API_PREFIX}/:courseid/faq/:faqid/question`,
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse
+  ],
+  question.post
+)
 router.post(
   `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid/inStack`,
-  [authJwt.verifyToken],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse,
+    verifyCourseProvide.checkQuestionInFaq
+  ],
   question.inStack
 )
 router.post(
   `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid/offStack`,
-  [authJwt.verifyToken],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse,
+    verifyCourseProvide.checkQuestionInFaq
+  ],
   question.offStack
 )
 router.patch(
   `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
-  [authJwt.verifyToken],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse,
+    verifyCourseProvide.checkQuestionInFaq
+  ],
   question.patch
 )
 router.delete(
   `${API_PREFIX}/:courseid/faq/:faqid/question/:questionid`,
-  [authJwt.verifyToken],
+  [
+    authJwt.verifyToken,
+    verifyCourseProvide.checkCourseExist,
+    verifyCourseProvide.checkIsOwned,
+    verifyCourseProvide.checkFaqInCourse,
+    verifyCourseProvide.checkQuestionInFaq
+  ],
   question.delete
 )
 
