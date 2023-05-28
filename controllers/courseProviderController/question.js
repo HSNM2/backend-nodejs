@@ -12,7 +12,7 @@ module.exports = {
 
       if (question) {
         return res.json({
-          success: true,
+          status: true,
           data: question
         })
       }
@@ -34,7 +34,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '新增問題內容成功'
         })
       }
@@ -62,7 +62,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '修改問題內容成功'
         })
       }
@@ -81,7 +81,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '刪除問題內容成功'
         })
       }
@@ -102,7 +102,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '上架問題內容成功'
         })
       }
@@ -123,7 +123,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '下架問題內容成功'
         })
       }

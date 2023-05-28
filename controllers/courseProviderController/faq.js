@@ -21,7 +21,7 @@ module.exports = {
 
       if (faqs) {
         return res.json({
-          success: true,
+          status: true,
           data: faqs
         })
       }
@@ -42,7 +42,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '新增問題類別'
         })
       }
@@ -69,7 +69,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '修改問題類別'
         })
       }
@@ -88,7 +88,7 @@ module.exports = {
 
       if (result) {
         return res.json({
-          success: true,
+          status: true,
           message: '刪除問題類別'
         })
       }
