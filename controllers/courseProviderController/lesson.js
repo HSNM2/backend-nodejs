@@ -162,7 +162,7 @@ module.exports = {
       const lesson = await Lesson.findByPk(lessonid)
 
       const result = lesson.update({
-        isPublished: false
+        isPublish: false
       })
 
       if (result) {
