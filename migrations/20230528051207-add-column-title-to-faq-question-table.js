@@ -14,11 +14,11 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('class_faq_questions', 'title')
     await queryInterface.changeColumn('class_faq_questions', 'publish', {
       allowNull: false,
       type: Sequelize.BOOLEAN,
       defaultValue: true
     })
+    await queryInterface.removeColumn('class_faq_questions', 'title')
   }
 }
