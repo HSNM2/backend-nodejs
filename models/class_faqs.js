@@ -8,11 +8,6 @@ ClassFaq = db.define('class_faqs', {
   title: {
     allowNull: false,
     type: DataTypes.STRING
-  },
-  publish: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: true
   }
 })
 
