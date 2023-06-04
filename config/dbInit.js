@@ -10,11 +10,15 @@ const { RatingSummary } = require('../models/rating_summarys')
 const { RatingPersonal } = require('../models/rating_personals')
 const { UserCourseAssociation } = require('../models/user_course_associations')
 const { UserFavorite } = require('../models/user_favorites')
+const { Order } = require('../models/orders')
+const { OrderDetail } = require('../models/order_details')
 
 User.belongsToMany(Course, { through: UserCourseAssociation })
 Course.belongsToMany(User, { through: UserCourseAssociation })
 User.hasMany(UserFavorite, { foreignKey: 'userId' })
 UserFavorite.belongsTo(User, { foreignKey: 'userId' })
+User.hasMany(Order, { foreignKey: 'userId' })
+Order.belongsTo(User, { foreignKey: 'userId' })
 
 // foreignKey 是 migrations 的key
 // 與課程資訊關聯
@@ -42,6 +46,10 @@ ClassFaqQuestion.belongsTo(ClassFaq, { foreignKey: 'faqId' })
 // 課程資訊平均分數
 RatingSummary.hasMany(RatingPersonal, { foreignKey: 'summaryId' })
 RatingPersonal.belongsTo(RatingSummary, { foreignKey: 'summaryId' })
+
+// order
+Order.hasMany(OrderDetail, { foreignKey: 'orderId' })
+OrderDetail.belongsTo(Order, { foreignKey: 'orderId' })
 
 // 查看是否關聯
 // const hasChapterLessonAssociation = Course.hasOne(Chapter)
