@@ -4,6 +4,9 @@ const cartController = require('controllers/cartController')
 
 const { verifySignUp, authJwt } = require('middleware')
 
-router.get('/', cartController.cartList.get)
+router.post('/', cartController.cartList.post)
+router.post('/order', [authJwt.verifyToken], cartController.order.post)
+router.post('/createOrder', [authJwt.verifyToken], cartController.createOrder.post)
+router.post('/spgatewayNotify', cartController.notify.post)
 
 module.exports = router
