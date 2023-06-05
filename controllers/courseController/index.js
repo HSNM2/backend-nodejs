@@ -9,7 +9,7 @@ const { ClassFaqQuestion } = require('models/class_faq_questions')
 const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
-const { formatDate } = require('src/js/formatDate')
+const { formatDate } = require('src/utils/formatDate')
 
 exports.course = {
   get: async (req, res) => {
@@ -57,8 +57,6 @@ exports.course = {
         ]
       })
       classInquiryData.sort((a, b) => a.id - b.id)
-
-      console.dir(classInquiryData)
 
       // 取得常見問題
       const classFaqData = await ClassFaq.findAll({
