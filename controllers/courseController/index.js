@@ -9,7 +9,7 @@ const { ClassFaqQuestion } = require('models/class_faq_questions')
 const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
-const { formatDate } = require('src/utils/formatDate')
+const { CONVERT } = require('src/utils/format')
 
 exports.course = {
   get: async (req, res) => {
@@ -101,14 +101,14 @@ exports.course = {
           name: inquiry.name,
           nickName: inquiry.user.nickName || '',
           imagePath: inquiry.user.avatarImagePath,
-          date: formatDate(inquiry.createdAt),
+          date: CONVERT.formatDate(inquiry.createdAt),
           content: inquiry.content,
           responses: inquiry.pre_class_inquiries_responses.map((inquiryRes) => ({
             id: inquiryRes.id,
             name: inquiryRes.name,
             nickName: inquiryRes.user.nickName || '',
             imagePath: inquiryRes.user.avatarImagePath,
-            date: formatDate(inquiryRes.createdAt),
+            date: CONVERT.formatDate(inquiryRes.createdAt),
             content: inquiryRes.content
           }))
         })),
@@ -129,7 +129,7 @@ exports.course = {
             ? ratingSummary.rating_personals.map((rating) => ({
                 name: rating.name,
                 number: rating.number,
-                date: formatDate(rating.createdAt),
+                date: CONVERT.formatDate(rating.createdAt),
                 content: rating.content || ''
               }))
             : []
