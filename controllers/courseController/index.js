@@ -9,6 +9,7 @@ const { ClassFaqQuestion } = require('models/class_faq_questions')
 const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
+const { formatDate } = require('src/js/formatDate')
 
 exports.course = {
   get: async (req, res) => {
@@ -37,15 +38,27 @@ exports.course = {
       //取得課前提問
       const classInquiryData = await PreClassInquiry.findAll({
         where: { courseId },
-        attributes: ['id', 'name', 'date', 'content'],
+        attributes: ['id', 'name', 'createdAt', 'content'],
         include: [
           {
             model: PreClassInquiryRes,
-            attributes: ['id', 'name', 'date', 'content']
+            attributes: ['id', 'name', 'createdAt', 'content'],
+            include: [
+              {
+                model: User,
+                attributes: ['nickName', 'avatarImagePath']
+              }
+            ]
+          },
+          {
+            model: User,
+            attributes: ['nickName', 'avatarImagePath']
           }
         ]
       })
       classInquiryData.sort((a, b) => a.id - b.id)
+
+      console.dir(classInquiryData)
 
       // 取得常見問題
       const classFaqData = await ClassFaq.findAll({
@@ -66,7 +79,7 @@ exports.course = {
         include: [
           {
             model: RatingPersonal,
-            attributes: ['name', 'number', 'date', 'content']
+            attributes: ['name', 'number', 'createdAt', 'content']
           }
         ]
       })
@@ -88,9 +101,18 @@ exports.course = {
         inquiries: classInquiryData.map((inquiry) => ({
           id: inquiry.id,
           name: inquiry.name,
-          date: inquiry.date,
+          nickName: inquiry.user.nickName || '',
+          imagePath: inquiry.user.avatarImagePath,
+          date: formatDate(inquiry.createdAt),
           content: inquiry.content,
-          responses: inquiry.pre_class_inquiries_responses
+          responses: inquiry.pre_class_inquiries_responses.map((inquiryRes) => ({
+            id: inquiryRes.id,
+            name: inquiryRes.name,
+            nickName: inquiryRes.user.nickName || '',
+            imagePath: inquiryRes.user.avatarImagePath,
+            date: formatDate(inquiryRes.createdAt),
+            content: inquiryRes.content
+          }))
         })),
         faqs: classFaqData.map((faq) => ({
           id: faq.id,
@@ -105,8 +127,14 @@ exports.course = {
         rating: {
           avgRating: ratingSummary ? ratingSummary.avgRating : 0,
           countRating: ratingSummary ? ratingSummary.countRating : 0,
-          ratings:
-            ratingSummary && ratingSummary.rating_personals ? ratingSummary.rating_personals : []
+          ratings: ratingSummary
+            ? ratingSummary.rating_personals.map((rating) => ({
+                name: rating.name,
+                number: rating.number,
+                date: formatDate(rating.createdAt),
+                content: rating.content || ''
+              }))
+            : []
         }
       }
 
@@ -140,6 +168,7 @@ exports.inquiryAsk = {
 
       await PreClassInquiry.create({
         courseId: courseId,
+        userId: userId,
         content: content,
         name: user.name
       })
@@ -172,6 +201,7 @@ exports.inquiryAnswer = {
 
     await PreClassInquiryRes.create({
       inquiriesId: inquiryId,
+      userId: userId,
       content: content,
       name: user.name
     })
