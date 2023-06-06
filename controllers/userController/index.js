@@ -1,5 +1,7 @@
 const { User } = require('models/users')
 const { Course } = require('models/courses')
+const { Chapter } = require('models/chapters')
+const { Lesson } = require('models/lessons')
 const { UserFavorite } = require('models/user_favorites')
 const { errorTemplateFun } = require('src/utils/template')
 
@@ -193,23 +195,40 @@ exports.profile = {
   }
 }
 
-exports.courses = {
+exports.course = {
   get: async (req, res) => {
     try {
-      const { userID } = req.body
+      const { courseid } = req.params
+      const { userId } = req
 
-      const result = await User.findByPk(userID, {
+      const user = await User.findByPk(userId)
+      const courses = await user.getCourses()
+      const course = courses[0]
+
+      // 取得該課程的章節資訊
+      const chapters = await Chapter.findAll({
+        where: { courseId: courseid },
+        attributes: ['id', 'title'],
         include: [
           {
-            model: Course
+            model: Lesson,
+            where: { isPublish: true },
+            attributes: ['id', 'title', 'videoPath']
           }
         ]
       })
 
-      res.json({
+      return res.json({
         status: true,
-        data: { ...result.dataValues }
+        data: [
+          {
+            id: courseid,
+            title: course.title,
+            chapters: [...chapters]
+          }
+        ]
       })
+      console.log(`courseid: `, courseid, ` / userId: `, userId)
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
