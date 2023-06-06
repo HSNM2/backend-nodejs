@@ -8,7 +8,6 @@ router.post('/register', [verifySignUp.checkDuplicateEmail], userController.regi
 router.post('/login', userController.login.post)
 router.post('/logout', [authJwt.verifyToken], userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)
-router.get('/courses', userController.courses.get)
 router.get('/course/:courseid', [authJwt.verifyToken], userController.course.get)
 router.get('/profile', [authJwt.verifyToken], userController.profile.get)
 router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
