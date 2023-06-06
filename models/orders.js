@@ -21,6 +21,12 @@ Order = db.define('orders', {
     allowNull: false,
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  paymentType: {
+    type: DataTypes.STRING
+  },
+  payTime: {
+    type: DataTypes.STRING
   }
 })
 

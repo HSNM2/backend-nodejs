@@ -148,6 +148,13 @@ exports.createOrder = {
         })
       }
 
+      if (!amt || !orderNumber) {
+        return res.json({
+          status: 400,
+          message: '請填妥表單'
+        })
+      }
+
       const createdOrder = await Order.create({
         email,
         merchantOrderNo: orderNumber,
@@ -181,7 +188,6 @@ exports.createOrder = {
 exports.notify = {
   post: async (req, res) => {
     try {
-      console.log('req.body notify data', req.body)
       const response = req.body
 
       const thisShaEncrypt = create_mpg_sha_encrypt(response.TradeInfo)
@@ -193,26 +199,25 @@ exports.notify = {
 
       // 解密交易內容
       const data = create_mpg_aes_decrypt(response.TradeInfo)
-      // console.log('data:', data)
 
       // 取得交易內容，並查詢本地端資料庫是否有相符的訂單
       const order = await Order.findOne({
         where: {
-          merchantOrderNo: data.MerchantOrderNo
+          merchantOrderNo: data.Result.MerchantOrderNo
         },
         include: OrderDetail
       })
 
       if (order) {
         order.isPurchased = true
-        order.paymentType = data.PaymentType
-        order.payTime = data.PayTime
+        order.paymentType = data.Result.PaymentType
+        order.payTime = data.Result.PayTime
         await order.save()
 
         const user = await User.findByPk(order.userId)
 
         if (user) {
-          for (const orderDetail of order.OrderDetail) {
+          for (const orderDetail of order.order_details) {
             const courseId = orderDetail.courseId
             await user.addCourse(courseId)
           }
