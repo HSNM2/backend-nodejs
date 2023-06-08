@@ -7,7 +7,9 @@ function genDataChain(order) {
     order.TimeStamp
   }&Version=${Version}&MerchantOrderNo=${order.MerchantOrderNo}&Amt=${
     order.Amt
-  }&ItemDesc=${encodeURIComponent(order.ItemDesc)}&Email=${encodeURIComponent(order.Email)}`
+  }&ItemDesc=${encodeURIComponent(order.ItemDesc)}&Email=${encodeURIComponent(
+    order.Email
+  )}&Name=${encodeURIComponent(order.Name)}`
 }
 
 // 對應文件 P16：使用 aes 加密
