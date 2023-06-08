@@ -8,6 +8,7 @@ const {
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
 } = require('./crypt')
+const { getCourseData, calculateTotalPrice } = require('./cartOperations')
 const { errorTemplateFun } = require('src/utils/template')
 
 exports.cartList = {
@@ -15,64 +16,32 @@ exports.cartList = {
     try {
       const courseIds = req.body.id
 
-      const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+      const attributes = [
+        'id',
+        'title',
+        'price',
+        'originPrice',
+        'link',
+        'image_path',
+        'type',
+        'provider'
+      ]
 
-      if (!Array.isArray(intCourseIds)) {
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
         return res.json({
-          status: 400,
-          message: '課程ID無效'
+          status,
+          message
         })
       }
 
-      if (intCourseIds.length === 0) {
-        return res.json({
-          status: 200,
-          message: '您的購物車是空的，前往探索吧！'
-        })
-      }
-
-      const cartData = []
-      const invalidCourseIds = []
-      for (const courseId of intCourseIds) {
-        const cart = await Course.findByPk(courseId, {
-          attributes: [
-            'id',
-            'title',
-            'price',
-            'originPrice',
-            'link',
-            'image_path',
-            'type',
-            'provider'
-          ]
-        })
-        if (!cart) {
-          invalidCourseIds.push(courseId)
-        } else {
-          cartData.push(cart)
-        }
-      }
-
-      if (invalidCourseIds.length > 0) {
-        return res.json({
-          status: 400,
-          message: '課程ID無效'
-        })
-      }
-
-      let totalPrice = 0
-      cartData.forEach((course) => {
-        if (course.price < course.originPrice) {
-          totalPrice += course.price
-        } else {
-          totalPrice += course.originPrice
-        }
-      })
+      const totalPrice = calculateTotalPrice(courseData)
 
       res.json({
         status: 200,
         message: '趕快下單吧',
-        data: cartData,
+        data: courseData,
         totalPrice: totalPrice
       })
     } catch (error) {
