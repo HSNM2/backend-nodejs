@@ -54,23 +54,42 @@ exports.cartList = {
 exports.order = {
   post: async (req, res) => {
     try {
-      const { itemDesc, amt } = req.body
-      const { email } = req
-      const timeStamp = Math.round(new Date().getTime() / 1000)
+      const courseIds = req.body.id
+      const { email, name } = req.body
 
-      if (email === '' || amt === '' || itemDesc === '') {
+      const attributes = ['id', 'title', 'price', 'originPrice']
+
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
+        return res.json({
+          status,
+          message
+        })
+      }
+
+      // 商品詳細，限制50字元
+      const itemDesc = courseData.map((course) => course.title)
+      const mergedDesc = itemDesc.join(', ')
+      const limitedDesc = mergedDesc.substring(0, 50)
+
+      const totalPrice = calculateTotalPrice(courseData)
+
+      if (email === '' || name === '') {
         return res.json({
           status: 400,
           message: '請填妥表單'
         })
       }
 
+      const timeStamp = Math.round(new Date().getTime() / 1000)
       const randomNum = Math.floor(Math.random() * 90000) + 10000
       const orderNumber = `${timeStamp}${randomNum}`
       const order = {
         Email: email,
-        Amt: amt,
-        ItemDesc: itemDesc, // 請前端固定回傳 “糖漬時光線上課程”
+        Name: name,
+        Amt: totalPrice,
+        ItemDesc: limitedDesc,
         TimeStamp: timeStamp,
         MerchantOrderNo: orderNumber
       }
@@ -81,11 +100,11 @@ exports.order = {
 
       // 加密第一段字串，此段主要是提供交易內容給予藍新金流
       const aesEncrypt = create_mpg_aes_encrypt(order)
-      console.log('aesEncrypt:', aesEncrypt)
+      // console.log('aesEncrypt:', aesEncrypt)
 
       // 使用 HASH 再次 SHA 加密字串，作為驗證使用
       const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt)
-      console.log('shaEncrypt:', shaEncrypt)
+      // console.log('shaEncrypt:', shaEncrypt)
 
       res.json({
         status: true,
