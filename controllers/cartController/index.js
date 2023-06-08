@@ -127,12 +127,14 @@ exports.createOrder = {
       const courseIds = req.body.id
       const discount = req.body.discount || 0
 
-      const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+      const attributes = ['id', 'price', 'originPrice']
 
-      if (!Array.isArray(intCourseIds)) {
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
         return res.json({
-          status: 400,
-          message: '課程ID無效'
+          status,
+          message
         })
       }
 
@@ -143,22 +145,23 @@ exports.createOrder = {
         })
       }
 
+      const totalPrice = calculateTotalPrice(courseData)
       const createdOrder = await Order.create({
         email,
         name,
         merchantOrderNo,
-        amt,
+        amt: totalPrice,
         isPurchased: false,
         userId
       })
 
-      for (const courseId of intCourseIds) {
-        const course = await Course.findByPk(courseId)
+      for (const item of courseData) {
+        const course = await Course.findByPk(item.id)
 
         if (course) {
           await OrderDetail.create({
             orderId: createdOrder.id,
-            courseId: courseId,
+            courseId: course.id,
             originalPrice: course.price ? course.price : course.originPrice,
             discount: discount
           })
