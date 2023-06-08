@@ -122,8 +122,8 @@ exports.order = {
 exports.createOrder = {
   post: async (req, res) => {
     try {
-      const { userId, email } = req
-      const { amt, orderNumber } = req.body
+      const { userId } = req
+      const { email, name, merchantOrderNo } = req.body
       const courseIds = req.body.id
       const discount = req.body.discount || 0
 
@@ -136,7 +136,7 @@ exports.createOrder = {
         })
       }
 
-      if (!amt || !orderNumber) {
+      if (email === '' || name === '' || merchantOrderNo === '') {
         return res.json({
           status: 400,
           message: '請填妥表單'
@@ -145,7 +145,8 @@ exports.createOrder = {
 
       const createdOrder = await Order.create({
         email,
-        merchantOrderNo: orderNumber,
+        name,
+        merchantOrderNo,
         amt,
         isPurchased: false,
         userId
@@ -158,7 +159,7 @@ exports.createOrder = {
           await OrderDetail.create({
             orderId: createdOrder.id,
             courseId: courseId,
-            originalPrice: course.price,
+            originalPrice: course.price ? course.price : course.originPrice,
             discount: discount
           })
         }
