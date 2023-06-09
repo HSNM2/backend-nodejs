@@ -7,8 +7,9 @@ const {
   create_mpg_aes_encrypt,
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
-} = require('./crypt')
-const { getCourseData, calculateTotalPrice } = require('./cartOperations')
+} = require('src/utils/crypt')
+const { getCourseData } = require('./cartOperations')
+const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
 
 exports.cartList = {
