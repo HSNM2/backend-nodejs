@@ -7,7 +7,9 @@ const {
   create_mpg_aes_encrypt,
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
-} = require('./crypt')
+} = require('src/utils/crypt')
+const { getCourseData } = require('./cartOperations')
+const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
 
 exports.cartList = {
@@ -15,64 +17,32 @@ exports.cartList = {
     try {
       const courseIds = req.body.id
 
-      const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+      const attributes = [
+        'id',
+        'title',
+        'price',
+        'originPrice',
+        'link',
+        'image_path',
+        'type',
+        'provider'
+      ]
 
-      if (!Array.isArray(intCourseIds)) {
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
         return res.json({
-          status: 400,
-          message: '課程ID無效'
+          status,
+          message
         })
       }
 
-      if (intCourseIds.length === 0) {
-        return res.json({
-          status: 200,
-          message: '您的購物車是空的，前往探索吧！'
-        })
-      }
-
-      const cartData = []
-      const invalidCourseIds = []
-      for (const courseId of intCourseIds) {
-        const cart = await Course.findByPk(courseId, {
-          attributes: [
-            'id',
-            'title',
-            'price',
-            'originPrice',
-            'link',
-            'image_path',
-            'type',
-            'provider'
-          ]
-        })
-        if (!cart) {
-          invalidCourseIds.push(courseId)
-        } else {
-          cartData.push(cart)
-        }
-      }
-
-      if (invalidCourseIds.length > 0) {
-        return res.json({
-          status: 400,
-          message: '課程ID無效'
-        })
-      }
-
-      let totalPrice = 0
-      cartData.forEach((course) => {
-        if (course.price < course.originPrice) {
-          totalPrice += course.price
-        } else {
-          totalPrice += course.originPrice
-        }
-      })
+      const totalPrice = calculateTotalPrice(courseData)
 
       res.json({
         status: 200,
         message: '趕快下單吧',
-        data: cartData,
+        data: courseData,
         totalPrice: totalPrice
       })
     } catch (error) {
@@ -85,23 +55,42 @@ exports.cartList = {
 exports.order = {
   post: async (req, res) => {
     try {
-      const { itemDesc, amt } = req.body
-      const { email } = req
-      const timeStamp = Math.round(new Date().getTime() / 1000)
+      const courseIds = req.body.id
+      const { email, name } = req.body
 
-      if (email === '' || amt === '' || itemDesc === '') {
+      const attributes = ['id', 'title', 'price', 'originPrice']
+
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
+        return res.json({
+          status,
+          message
+        })
+      }
+
+      // 商品詳細，限制50字元
+      const itemDesc = courseData.map((course) => course.title)
+      const mergedDesc = itemDesc.join(', ')
+      const limitedDesc = mergedDesc.substring(0, 50)
+
+      const totalPrice = calculateTotalPrice(courseData)
+
+      if (email === '' || name === '') {
         return res.json({
           status: 400,
           message: '請填妥表單'
         })
       }
 
+      const timeStamp = Math.round(new Date().getTime() / 1000)
       const randomNum = Math.floor(Math.random() * 90000) + 10000
       const orderNumber = `${timeStamp}${randomNum}`
       const order = {
         Email: email,
-        Amt: amt,
-        ItemDesc: itemDesc, // 請前端固定回傳 “糖漬時光線上課程”
+        Name: name,
+        Amt: totalPrice,
+        ItemDesc: limitedDesc,
         TimeStamp: timeStamp,
         MerchantOrderNo: orderNumber
       }
@@ -112,11 +101,11 @@ exports.order = {
 
       // 加密第一段字串，此段主要是提供交易內容給予藍新金流
       const aesEncrypt = create_mpg_aes_encrypt(order)
-      console.log('aesEncrypt:', aesEncrypt)
+      // console.log('aesEncrypt:', aesEncrypt)
 
       // 使用 HASH 再次 SHA 加密字串，作為驗證使用
       const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt)
-      console.log('shaEncrypt:', shaEncrypt)
+      // console.log('shaEncrypt:', shaEncrypt)
 
       res.json({
         status: true,
@@ -134,43 +123,47 @@ exports.order = {
 exports.createOrder = {
   post: async (req, res) => {
     try {
-      const { userId, email } = req
-      const { amt, orderNumber } = req.body
+      const { userId } = req
+      const { email, name, merchantOrderNo } = req.body
       const courseIds = req.body.id
       const discount = req.body.discount || 0
 
-      const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
+      const attributes = ['id', 'price', 'originPrice']
 
-      if (!Array.isArray(intCourseIds)) {
+      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+
+      if (status === 400) {
         return res.json({
-          status: 400,
-          message: '課程ID無效'
+          status,
+          message
         })
       }
 
-      if (!amt || !orderNumber) {
+      if (email === '' || name === '' || merchantOrderNo === '') {
         return res.json({
           status: 400,
           message: '請填妥表單'
         })
       }
 
+      const totalPrice = calculateTotalPrice(courseData)
       const createdOrder = await Order.create({
         email,
-        merchantOrderNo: orderNumber,
-        amt,
+        name,
+        merchantOrderNo,
+        amt: totalPrice,
         isPurchased: false,
         userId
       })
 
-      for (const courseId of intCourseIds) {
-        const course = await Course.findByPk(courseId)
+      for (const item of courseData) {
+        const course = await Course.findByPk(item.id)
 
         if (course) {
           await OrderDetail.create({
             orderId: createdOrder.id,
-            courseId: courseId,
-            originalPrice: course.price,
+            courseId: course.id,
+            originalPrice: course.price ? course.price : course.originPrice,
             discount: discount
           })
         }
