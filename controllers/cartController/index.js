@@ -212,6 +212,13 @@ exports.notify = {
         if (user) {
           for (const orderDetail of order.order_details) {
             const courseId = orderDetail.courseId
+
+            const course = await Course.findByPk(courseId)
+            if (course) {
+              course.buyers = (course.buyers || 0) + 1
+              await course.save()
+            }
+
             await user.addCourse(courseId)
           }
         }
