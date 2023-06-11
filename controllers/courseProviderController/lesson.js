@@ -1,5 +1,7 @@
 const { Chapter } = require('models/chapters')
 const { Lesson } = require('models/lessons')
+const { s3Uploadv3 } = require('../../src/js/s3Service')
+const { errorTemplateFun } = require('src/utils/template')
 const multer = require('multer')
 
 const fileFilter = (req, file, cb) => {
