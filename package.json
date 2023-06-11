@@ -1,6 +1,6 @@
 {
   "name": "backend-nodejs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "糖漬時光的後端 Server",
   "main": "app.js",
   "repository": "git@github.com:HSNM2/backend-nodejs.git",
