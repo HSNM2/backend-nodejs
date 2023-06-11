@@ -17,7 +17,9 @@
     "db:migrate:prod": "npx sequelize-cli db:migrate --env production",
     "db:undo:prod": "npx sequelize-cli db:migrate:undo --env production",
     "db:undo:all:prod": "npx sequelize-cli db:migrate:undo:all --env production",
-    "db:status:prod": "npx sequelize-cli db:migrate:status --env production"
+    "db:status:prod": "npx sequelize-cli db:migrate:status --env production",
+    "release": "standard-version",
+    "try-release": "standard-version --dry-run"
   },
   "devDependencies": {
     "eslint": "^8.39.0",
@@ -25,7 +27,8 @@
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
-    "sequelize-cli": "^6.6.0"
+    "sequelize-cli": "^6.6.0",
+    "standard-version": "^9.5.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.335.0",
@@ -48,5 +51,11 @@
     "routers": "routers",
     "src": "src",
     "models": "models"
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true
+    }
   }
 }
