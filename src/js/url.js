@@ -1,0 +1,2 @@
+exports.USER_AVATAR_FOLDER_PREFIX = 'avatar'
+exports.COURSE_PROVIDER_VIDEO_FOLDER_PREFIX = 'video'

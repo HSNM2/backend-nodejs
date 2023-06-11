@@ -4,10 +4,6 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/*.env
 *.code-workspace
 *.env
 
@@ -61,3 +57,5 @@ react/package-lock.json
 
 backend.exe
 /node_modules
+
+uploads
