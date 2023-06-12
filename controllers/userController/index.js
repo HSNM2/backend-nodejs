@@ -10,7 +10,7 @@ let bcrypt = require('bcryptjs')
 const { generateUserId } = require('src/js/generate')
 const { identityValidate } = require('src/js/validate')
 const { IDENTITY } = require('src/constants/identityMapping')
-const { USER_AVATAR_FOLDER_PREFIX } = require('src/js/url')
+const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
 
 const isTeacher = identityValidate(IDENTITY.Teacher)
 
@@ -218,17 +218,27 @@ exports.course = {
         ]
       })
 
+      const VIDEO_PREFIX =
+        process.env.NODE_ENV === 'development'
+          ? `http://localhost:${process.env.PORT || 3002}/static/video/`
+          : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_VIDEO_FOLDER_PREFIX}/`
+
+      chapters.forEach((chapter) => {
+        chapter.lessons.forEach((lesson) => {
+          lesson.videoPath = `${VIDEO_PREFIX}${lesson.videoPath}`
+        })
+      })
+
       return res.json({
         status: true,
         data: [
           {
             id: courseid,
             title: course.title,
-            chapters: [...chapters]
+            chapters
           }
         ]
       })
-      console.log(`courseid: `, courseid, ` / userId: `, userId)
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))
