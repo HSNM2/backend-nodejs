@@ -2,7 +2,7 @@ const multer = require('multer')
 const { errorTemplateFun } = require('src/utils/template')
 const { s3Uploadv3, s3Delete3 } = require('../../src/js/s3Service')
 const { Course } = require('models/courses')
-const { COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
+const { URL_PREFIX, COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
 const { checkCourseExist } = require('../../src/utils/template')
 const fs = require('fs')
 const path = require('path')
@@ -64,10 +64,7 @@ module.exports = {
           success: true,
           data: {
             message: '課程封面照上傳成功',
-            imagePath:
-              process.env.NODE_ENV === 'development'
-                ? `http://localhost:${process.env.PORT || 3002}/static/${FOLDER_PREFIX}/${fileName}`
-                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${FOLDER_PREFIX}/${fileName}`
+            imagePath: `${URL_PREFIX}/${FOLDER_PREFIX}/${fileName}`
           }
         })
       }
