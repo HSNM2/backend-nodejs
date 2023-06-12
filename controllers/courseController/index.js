@@ -10,7 +10,7 @@ const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
 const { CONVERT } = require('src/utils/format')
-const { COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
+const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
 
 exports.course = {
   get: async (req, res) => {
@@ -101,14 +101,24 @@ exports.course = {
           id: inquiry.id,
           name: inquiry.name,
           nickName: inquiry.user.nickName || '',
-          imagePath: inquiry.user.avatarImagePath,
+          imagePath:
+            process.env.NODE_ENV === 'development'
+              ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                  inquiry.user.avatarImagePath
+                }`
+              : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiry.user.avatarImagePath}`,
           date: CONVERT.formatDate(inquiry.createdAt),
           content: inquiry.content,
           responses: inquiry.pre_class_inquiries_responses.map((inquiryRes) => ({
             id: inquiryRes.id,
             name: inquiryRes.name,
             nickName: inquiryRes.user.nickName || '',
-            imagePath: inquiryRes.user.avatarImagePath,
+            imagePath:
+              process.env.NODE_ENV === 'development'
+                ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                    inquiry.user.avatarImagePath
+                  }`
+                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiry.user.avatarImagePath}`,
             date: CONVERT.formatDate(inquiryRes.createdAt),
             content: inquiryRes.content
           }))
