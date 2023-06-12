@@ -14,6 +14,15 @@ const checkUserExist = (user) => {
   }
 }
 
+const checkCourseExist = (course) => {
+  if (!course) {
+    return res.status(404).json({
+      status: false,
+      message: '查無此課程'
+    })
+  }
+}
+
 const checkChapterExist = (user) => {
   if (!user) {
     return res.status(404).json({
@@ -26,5 +35,6 @@ const checkChapterExist = (user) => {
 module.exports = {
   errorTemplateFun,
   checkUserExist,
+  checkCourseExist,
   checkChapterExist
 }
