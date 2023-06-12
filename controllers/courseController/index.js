@@ -10,6 +10,7 @@ const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
 const { CONVERT } = require('src/utils/format')
+const { COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
 
 exports.course = {
   get: async (req, res) => {

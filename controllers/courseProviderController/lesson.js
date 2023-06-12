@@ -3,6 +3,7 @@ const { Lesson } = require('models/lessons')
 const { s3Uploadv3 } = require('../../src/js/s3Service')
 const { errorTemplateFun } = require('src/utils/template')
 const multer = require('multer')
+const { COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.split('/')[0] === 'video') {
