@@ -8,9 +8,14 @@ const {
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
 } = require('src/utils/crypt')
-const { getCourseData } = require('./cartOperations')
+const { getAllCourseByArroy } = require('src/utils/courseUtils')
 const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
+
+const cartMessages = {
+  empty: '您的購物車是空的，前往探索吧！',
+  invalid: '購物車中有無效的課程ID'
+}
 
 exports.cartList = {
   post: async (req, res) => {
@@ -28,7 +33,11 @@ exports.cartList = {
         'provider'
       ]
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArroy(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({
@@ -60,7 +69,11 @@ exports.order = {
 
       const attributes = ['id', 'title', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArroy(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({
@@ -130,7 +143,11 @@ exports.createOrder = {
 
       const attributes = ['id', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArroy(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({

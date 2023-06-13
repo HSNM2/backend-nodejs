@@ -1,19 +1,21 @@
 const { Course } = require('models/courses')
 
-const getCourseData = async (courseIds, attributes) => {
+const getAllCourseByArroy = async (courseIds, attributes, messages) => {
   const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
 
   if (!Array.isArray(intCourseIds)) {
     return {
       status: 400,
-      message: '課程ID無效'
+      message: messages.invalid,
+      courseData: []
     }
   }
 
   if (intCourseIds.length === 0) {
     return {
       status: 200,
-      message: '您的購物車是空的，前往探索吧！'
+      message: messages.empty,
+      courseData: []
     }
   }
 
@@ -27,7 +29,8 @@ const getCourseData = async (courseIds, attributes) => {
   if (courseData.length !== intCourseIds.length) {
     return {
       status: 400,
-      message: '課程ID無效'
+      message: messages.invalid,
+      courseData: []
     }
   }
 
@@ -35,10 +38,11 @@ const getCourseData = async (courseIds, attributes) => {
 
   return {
     status: 200,
+    message: '查詢課程成功',
     courseData
   }
 }
 
 module.exports = {
-  getCourseData
+  getAllCourseByArroy
 }
