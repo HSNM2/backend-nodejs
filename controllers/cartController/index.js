@@ -83,9 +83,14 @@ exports.order = {
       }
 
       // 商品詳細，限制50字元
-      const itemDesc = courseData.map((course) => course.title)
-      const mergedDesc = itemDesc.join(', ')
-      const limitedDesc = mergedDesc.substring(0, 50)
+      let limitedDesc
+      if (courseData.length > 0) {
+        const itemDesc = courseData.map((course) => course.title)
+        const mergedDesc = itemDesc.join(', ')
+        limitedDesc = mergedDesc.substring(0, 50)
+      } else {
+        limitedDesc = ''
+      }
 
       const totalPrice = calculateTotalPrice(courseData)
 
