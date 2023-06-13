@@ -1,6 +1,7 @@
 const { Course } = require('models/courses')
 const { RatingSummary } = require('models/rating_summarys')
 const { errorTemplateFun } = require('src/utils/template')
+const { URL_PREFIX, COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
 
 // 取得課程列表
 exports.courses = {
@@ -44,7 +45,9 @@ exports.courses = {
           id: course.id,
           title: course.title,
           subTittle: course.subTitle,
-          image_path: course.image_path,
+          image_path: course.image_path
+            ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+            : null,
           price: course.price,
           originPrice: course.originPrice,
           link: course.link,
