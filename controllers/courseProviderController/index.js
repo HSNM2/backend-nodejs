@@ -61,7 +61,9 @@ exports.course = {
             originPrice: course.originPrice,
             title: course.title,
             tag: course.tag,
-            image_path: `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`,
+            image_path: course.image_path
+              ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+              : null,
             link: course.link,
             subTitle: course.subTitle,
             description: course.description,
