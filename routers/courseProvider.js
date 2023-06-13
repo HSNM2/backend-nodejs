@@ -249,6 +249,6 @@ router.post(
   coverPhotoUpload.post
 )
 
-router.delete('/coverPhoto/upload', [authJwt.verifyToken], coverPhotoUpload.delete)
+router.delete('/coverPhoto/upload/:courseId', [authJwt.verifyToken], coverPhotoUpload.delete)
 
 module.exports = router

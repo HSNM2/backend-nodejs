@@ -75,7 +75,7 @@ module.exports = {
   },
   delete: async (req, res) => {
     try {
-      const { courseId } = req.body
+      const { courseId } = req.params
 
       const course = await Course.findByPk(courseId)
       checkCourseExist(course)
