@@ -267,7 +267,7 @@ exports.favorite = {
           })
         }
 
-        const updatedFavoriteCourses = favoriteCourses + ',' + courseId
+        const updatedFavoriteCourses = favoriteCourses ? `${favoriteCourses},${courseId}` : courseId
 
         await userFavorite.update({
           favorite: updatedFavoriteCourses
@@ -351,10 +351,17 @@ exports.getFavorite = {
         attributes: ['favorite']
       })
 
+      if (!userFavorite.favorite) {
+        return res.json({
+          status: false,
+          message: '尚未有任何收藏課程'
+        })
+      }
+
       return res.json({
         status: true,
         message: '取得收藏成功',
-        data: userFavorite.favorite || ''
+        data: userFavorite.favorite
       })
     } catch (error) {
       console.error(error)
