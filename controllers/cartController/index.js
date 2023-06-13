@@ -8,7 +8,7 @@ const {
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
 } = require('src/utils/crypt')
-const { getAllCourseByArroy } = require('src/utils/courseUtils')
+const { getAllCourseByArray } = require('src/utils/courseUtils')
 const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
 
@@ -33,7 +33,7 @@ exports.cartList = {
         'provider'
       ]
 
-      const { status, message, courseData } = await getAllCourseByArroy(
+      const { status, message, courseData } = await getAllCourseByArray(
         courseIds,
         attributes,
         cartMessages
@@ -69,7 +69,7 @@ exports.order = {
 
       const attributes = ['id', 'title', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getAllCourseByArroy(
+      const { status, message, courseData } = await getAllCourseByArray(
         courseIds,
         attributes,
         cartMessages
@@ -148,7 +148,7 @@ exports.createOrder = {
 
       const attributes = ['id', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getAllCourseByArroy(
+      const { status, message, courseData } = await getAllCourseByArray(
         courseIds,
         attributes,
         cartMessages

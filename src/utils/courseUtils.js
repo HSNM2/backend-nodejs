@@ -1,6 +1,6 @@
 const { Course } = require('models/courses')
 
-const getAllCourseByArroy = async (courseIds, attributes, messages) => {
+const getAllCourseByArray = async (courseIds, attributes, messages) => {
   const intCourseIds = courseIds.map((id) => parseInt(id)).filter((id) => !isNaN(id))
 
   if (!Array.isArray(intCourseIds)) {
@@ -44,5 +44,5 @@ const getAllCourseByArroy = async (courseIds, attributes, messages) => {
 }
 
 module.exports = {
-  getAllCourseByArroy
+  getAllCourseByArray
 }

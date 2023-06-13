@@ -12,7 +12,7 @@ const { generateUserId } = require('src/js/generate')
 const { identityValidate } = require('src/js/validate')
 const { IDENTITY } = require('src/constants/identityMapping')
 const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
-const { getAllCourseByArroy } = require('src/utils/courseUtils')
+const { getAllCourseByArray } = require('src/utils/courseUtils')
 
 const { Op } = require('sequelize')
 const isTeacher = identityValidate(IDENTITY.Teacher)
@@ -402,7 +402,7 @@ exports.favoriteCourse = {
         'totalTime'
       ]
 
-      const { status, message, courseData } = await getAllCourseByArroy(
+      const { status, message, courseData } = await getAllCourseByArray(
         courseIds,
         attributes,
         favoriteMessages
