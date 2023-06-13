@@ -1,5 +1,6 @@
 const calculateTotalPrice = (courseData) => {
   let totalPrice = 0
+  if (!courseData) return totalPrice
 
   courseData.forEach((course) => {
     if (course.price < course.originPrice) {
