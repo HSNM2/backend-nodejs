@@ -20,6 +20,7 @@ router.post(
 router.post('/tag/:courseId', [authJwt.verifyToken], userController.favorite.post)
 router.delete('/tag/:courseId', [authJwt.verifyToken], userController.favorite.delete)
 router.get('/tag/userFavorite', [authJwt.verifyToken], userController.getFavorite.get)
+router.get('/tag', [authJwt.verifyToken], userController.favoriteCourse.get)
 router.get('/identity', [authJwt.verifyToken], userController.identity.get)
 router.post('/identity', [authJwt.verifyToken], userController.identity.post)
 router.post('/ownedCourse/check', [authJwt.verifyToken], userController.ownedCourse.post)

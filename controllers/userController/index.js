@@ -3,6 +3,7 @@ const { Course } = require('models/courses')
 const { Chapter } = require('models/chapters')
 const { Lesson } = require('models/lessons')
 const { UserFavorite } = require('models/user_favorites')
+const { RatingSummary } = require('models/rating_summarys')
 const { errorTemplateFun } = require('src/utils/template')
 
 let jwt = require('jsonwebtoken')
@@ -11,8 +12,15 @@ const { generateUserId } = require('src/js/generate')
 const { identityValidate } = require('src/js/validate')
 const { IDENTITY } = require('src/constants/identityMapping')
 const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
+const { getAllCourseByArray } = require('src/utils/courseUtils')
 
+const { Op } = require('sequelize')
 const isTeacher = identityValidate(IDENTITY.Teacher)
+
+const favoriteMessages = {
+  empty: '您的課程收藏是空的，前往探索吧！',
+  invalid: '課程收藏中有無效的課程ID'
+}
 
 exports.register = {
   post: async (req, res) => {
@@ -362,6 +370,73 @@ exports.getFavorite = {
         status: true,
         message: '取得收藏成功',
         data: userFavorite.favorite
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.favoriteCourse = {
+  get: async (req, res) => {
+    try {
+      const userId = req.userId
+
+      const userFavorite = await UserFavorite.findOne({
+        where: { userId },
+        attributes: ['favorite']
+      })
+
+      if (!userFavorite.favorite) {
+        return res.json({
+          status: false,
+          message: '尚未有任何收藏課程'
+        })
+      }
+
+      const courseIds = userFavorite.favorite.split(',').map(Number)
+
+      const attributes = [
+        'id',
+        'title',
+        'price',
+        'originPrice',
+        'image_path',
+        'link',
+        'provider',
+        'buyers',
+        'totalTime'
+      ]
+
+      const { status, message, courseData } = await getAllCourseByArray(
+        courseIds,
+        attributes,
+        favoriteMessages
+      )
+
+      const ratings = await RatingSummary.findAll({
+        where: {
+          courseId: {
+            [Op.in]: courseIds
+          }
+        },
+        attributes: ['courseId', 'avgRating', 'countRating']
+      })
+
+      const mergedData = courseData.map((course) => {
+        const rating = ratings.find((r) => r.courseId === course.id)
+        return {
+          ...course.dataValues,
+          avgRating: rating ? rating.avgRating : 0,
+          countRating: rating ? rating.countRating : 0
+        }
+      })
+
+      return res.json({
+        status,
+        message,
+        data: mergedData
       })
     } catch (error) {
       console.error(error)
