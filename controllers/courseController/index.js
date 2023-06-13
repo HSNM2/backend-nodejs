@@ -10,7 +10,12 @@ const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
 const { CONVERT } = require('src/utils/format')
-const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
+const {
+  URL_PREFIX,
+  COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX,
+  USER_AVATAR_FOLDER_PREFIX,
+  COURSE_PROVIDER_VIDEO_FOLDER_PREFIX
+} = require('src/js/url')
 
 exports.course = {
   get: async (req, res) => {
@@ -84,7 +89,12 @@ exports.course = {
       })
 
       const responseData = {
-        course: courseData,
+        course: {
+          ...courseData.dataValues,
+          image_path: courseData.image_path
+            ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${courseData.image_path}`
+            : null
+        },
         chapters: chapters.map((chapter) => ({
           id: chapter.id,
           title: chapter.title,
