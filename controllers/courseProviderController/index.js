@@ -24,7 +24,9 @@ exports.courses = {
       const resultCourse = courses.map((course) => ({
         id: course.id,
         title: course.title,
-        image_page: course.image_page,
+        image_path: course.image_path
+          ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+          : null,
         isPublish: course.isPublish
       }))
 
