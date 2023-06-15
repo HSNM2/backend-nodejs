@@ -6,6 +6,7 @@ const { UserFavorite } = require('models/user_favorites')
 const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
+const { CONVERT } = require('src/utils/format')
 
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
@@ -636,6 +637,71 @@ exports.rating = {
       return res.json({
         status: 200,
         message: '評價成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      const ratingSummary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        }
+      })
+
+      if (!ratingSummary) {
+        res.json({
+          status: 400,
+          message: '資料不存在'
+        })
+      }
+      const summaryId = ratingSummary.id
+      let rating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summaryId,
+          userId: userId
+        },
+        attributes: ['content', 'score', 'createdAt'],
+        include: [
+          {
+            model: User,
+            attributes: ['name', 'nickName', 'avatarImagePath']
+          }
+        ]
+      })
+
+      if (!rating) {
+        return res.json({
+          status: 200,
+          message: '使用者尚未評價該課程'
+        })
+      }
+
+      res.json({
+        rating: {
+          name: rating.user.name,
+          score: rating.score,
+          nickName: rating.user.nickName || '',
+          imagePath:
+            process.env.NODE_ENV === 'development'
+              ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                  rating.user.avatarImagePath
+                }`
+              : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${rating.user.avatarImagePath}`,
+          date: CONVERT.formatDate(rating.createdAt),
+          content: rating.content || ''
+        }
       })
     } catch (error) {
       console.error(error)
