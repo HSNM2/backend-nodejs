@@ -565,17 +565,31 @@ exports.rating = {
       const courseId = req.params.courseid
       const { content, score } = req.body
 
-      if (score === undefined || isNaN(score)) {
-        return res.json({
-          status: 400,
-          message: '評分資料有誤'
-        })
-      }
-
       if (!userId || !courseId) {
         return res.json({
           status: 400,
           message: '資料有誤'
+        })
+      }
+
+      if (score < 0 || score > 5) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (!score) {
+        return res.json({
+          status: 400,
+          message: '分數未填'
+        })
+      }
+
+      if (!content) {
+        return res.json({
+          status: 400,
+          message: '評論未填'
         })
       }
 
