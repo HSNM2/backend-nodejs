@@ -709,3 +709,70 @@ exports.rating = {
     }
   }
 }
+
+exports.ratingList = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      // 取得課程的評價摘要
+      let rating = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        },
+        attributes: ['avgRating', 'countRating'],
+        include: [
+          {
+            model: RatingPersonal,
+            attributes: ['content', 'score', 'createdAt'],
+            include: [
+              {
+                model: User,
+                attributes: ['name', 'nickName', 'avatarImagePath']
+              }
+            ]
+          }
+        ]
+      })
+
+      // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
+      if (!rating) {
+        rating = await RatingSummary.create({
+          courseId,
+          avgRating: 0,
+          countRating: 0
+        })
+      }
+
+      res.json({
+        avgRating: rating ? rating.avgRating : 0,
+        countRating: rating ? rating.countRating : 0,
+        ratings: rating
+          ? rating.rating_personals.map((item) => ({
+              name: item.user.name,
+              score: item.score,
+              nickName: item.user.nickName || '',
+              imagePath:
+                process.env.NODE_ENV === 'development'
+                  ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                      item.user.avatarImagePath
+                    }`
+                  : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${item.user.avatarImagePath}`,
+              date: CONVERT.formatDate(item.createdAt),
+              content: item.content || ''
+            }))
+          : []
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
