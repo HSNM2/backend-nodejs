@@ -4,6 +4,7 @@ const { Chapter } = require('models/chapters')
 const { Lesson } = require('models/lessons')
 const { UserFavorite } = require('models/user_favorites')
 const { RatingSummary } = require('models/rating_summarys')
+const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
 
 let jwt = require('jsonwebtoken')
@@ -549,6 +550,93 @@ exports.ownedCourse = {
           isOwned: false
         })
       }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.rating = {
+  post: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      const { content, score } = req.body
+
+      if (score === undefined || isNaN(score)) {
+        return res.json({
+          status: 400,
+          message: '評分資料有誤'
+        })
+      }
+
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      let summary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        },
+        attributes: ['id', 'avgRating', 'countRating']
+      })
+
+      // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
+      if (!summary) {
+        summary = await RatingSummary.create({
+          courseId,
+          avgRating: 0,
+          countRating: 0
+        })
+      }
+
+      // 判別是否已評分過
+      const existingRating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summary.id,
+          userId: userId
+        }
+      })
+
+      if (existingRating) {
+        return res.json({
+          status: 400,
+          message: '您已對該課程進行評價'
+        })
+      }
+
+      const ratingPersonal = await RatingPersonal.create({
+        content,
+        score,
+        summaryId: summary.id,
+        userId
+      })
+
+      // 計算新的平均評分和更新評價總人數
+      const ratings = await RatingPersonal.findAll({
+        where: {
+          summaryId: summary.id
+        },
+        attributes: ['score']
+      })
+
+      const totalRatings = ratings.length
+      const totalScores = ratings.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
+      const avgRating = totalScores / totalRatings
+
+      // 更新 RatingSummary 的資料
+      summary.avgRating = avgRating
+      summary.countRating = totalRatings
+      await summary.save()
+
+      return res.json({
+        status: 200,
+        message: '評價成功'
+      })
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))

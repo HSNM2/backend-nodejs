@@ -24,5 +24,6 @@ router.get('/tag', [authJwt.verifyToken], userController.favoriteCourse.get)
 router.get('/identity', [authJwt.verifyToken], userController.identity.get)
 router.post('/identity', [authJwt.verifyToken], userController.identity.post)
 router.post('/ownedCourse/check', [authJwt.verifyToken], userController.ownedCourse.post)
+router.post('/course/:courseid/rating', [authJwt.verifyToken], userController.rating.post)
 
 module.exports = router
