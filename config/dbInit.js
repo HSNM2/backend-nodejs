@@ -23,6 +23,8 @@ User.hasMany(PreClassInquiry, { foreignKey: 'userId' })
 PreClassInquiry.belongsTo(User, { foreignKey: 'userId' })
 User.hasMany(PreClassInquiryRes, { foreignKey: 'userId' })
 PreClassInquiryRes.belongsTo(User, { foreignKey: 'userId' })
+User.hasMany(RatingPersonal, { foreignKey: 'userId' })
+RatingPersonal.belongsTo(User, { foreignKey: 'userId' })
 
 // foreignKey 是 migrations 的key
 // 與課程資訊關聯
