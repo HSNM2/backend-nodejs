@@ -707,6 +707,69 @@ exports.rating = {
       console.error(error)
       res.json(errorTemplateFun(error))
     }
+  },
+  patch: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      const { content, score } = req.body
+
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      const ratingSummary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        }
+      })
+
+      if (!ratingSummary) {
+        return res.json({
+          status: 400,
+          message: '資料不存在'
+        })
+      }
+
+      const summaryId = ratingSummary.id
+      let rating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summaryId,
+          userId: userId
+        },
+        attributes: ['id', 'content', 'score']
+      })
+
+      if (!rating) {
+        return res.json({
+          status: 200,
+          message: '使用者尚未評價該課程'
+        })
+      }
+
+      await RatingPersonal.update(
+        {
+          content,
+          score
+        },
+        {
+          where: {
+            id: rating.id
+          }
+        }
+      )
+
+      res.json({
+        status: 200,
+        message: '修改成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
   }
 }
 
