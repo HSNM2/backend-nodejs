@@ -706,6 +706,27 @@ exports.rating = {
         })
       }
 
+      if (score < 0 || score > 5) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (!score) {
+        return res.json({
+          status: 400,
+          message: '分數未填'
+        })
+      }
+
+      if (!content) {
+        return res.json({
+          status: 400,
+          message: '評論未填'
+        })
+      }
+
       const ratingSummary = await RatingSummary.findOne({
         where: {
           courseId: courseId
