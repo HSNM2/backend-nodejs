@@ -4,7 +4,9 @@ const { Chapter } = require('models/chapters')
 const { Lesson } = require('models/lessons')
 const { UserFavorite } = require('models/user_favorites')
 const { RatingSummary } = require('models/rating_summarys')
+const { RatingPersonal } = require('models/rating_personals')
 const { errorTemplateFun } = require('src/utils/template')
+const { CONVERT } = require('src/utils/format')
 
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
@@ -549,6 +551,308 @@ exports.ownedCourse = {
           isOwned: false
         })
       }
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.rating = {
+  post: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      const { content, score } = req.body
+
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (score < 0 || score > 5) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (!score) {
+        return res.json({
+          status: 400,
+          message: '分數未填'
+        })
+      }
+
+      if (!content) {
+        return res.json({
+          status: 400,
+          message: '評論未填'
+        })
+      }
+
+      let summary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        },
+        attributes: ['id', 'avgRating', 'countRating']
+      })
+
+      // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
+      if (!summary) {
+        summary = await RatingSummary.create({
+          courseId,
+          avgRating: 0,
+          countRating: 0
+        })
+      }
+
+      // 判別是否已評分過
+      const existingRating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summary.id,
+          userId: userId
+        }
+      })
+
+      if (existingRating) {
+        return res.json({
+          status: 400,
+          message: '您已對該課程進行評價'
+        })
+      }
+
+      const ratingPersonal = await RatingPersonal.create({
+        content,
+        score,
+        summaryId: summary.id,
+        userId
+      })
+
+      // 計算新的平均評分和更新評價總人數
+      const ratings = await RatingPersonal.findAll({
+        where: {
+          summaryId: summary.id
+        },
+        attributes: ['score']
+      })
+
+      const totalRatings = ratings.length
+      const totalScores = ratings.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
+      const avgRating = totalScores / totalRatings
+
+      // 更新 RatingSummary 的資料
+      summary.avgRating = avgRating
+      summary.countRating = totalRatings
+      await summary.save()
+
+      return res.json({
+        status: 200,
+        message: '評價成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      const ratingSummary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        }
+      })
+
+      if (!ratingSummary) {
+        res.json({
+          status: 400,
+          message: '資料不存在'
+        })
+      }
+      const summaryId = ratingSummary.id
+      let rating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summaryId,
+          userId: userId
+        },
+        attributes: ['content', 'score']
+      })
+
+      if (!rating) {
+        return res.json({
+          status: 200,
+          message: '使用者尚未評價該課程'
+        })
+      }
+
+      res.json({
+        data: {
+          score: rating.score,
+          content: rating.content || ''
+        }
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  },
+  patch: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      const { content, score } = req.body
+
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (score < 0 || score > 5) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      if (!score) {
+        return res.json({
+          status: 400,
+          message: '分數未填'
+        })
+      }
+
+      if (!content) {
+        return res.json({
+          status: 400,
+          message: '評論未填'
+        })
+      }
+
+      const ratingSummary = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        }
+      })
+
+      if (!ratingSummary) {
+        return res.json({
+          status: 400,
+          message: '資料不存在'
+        })
+      }
+
+      const summaryId = ratingSummary.id
+      let rating = await RatingPersonal.findOne({
+        where: {
+          summaryId: summaryId,
+          userId: userId
+        },
+        attributes: ['id', 'content', 'score']
+      })
+
+      if (!rating) {
+        return res.json({
+          status: 200,
+          message: '使用者尚未評價該課程'
+        })
+      }
+
+      await RatingPersonal.update(
+        {
+          content,
+          score
+        },
+        {
+          where: {
+            id: rating.id
+          }
+        }
+      )
+
+      res.json({
+        status: 200,
+        message: '修改成功'
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.ratingList = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const courseId = req.params.courseid
+      if (!userId || !courseId) {
+        return res.json({
+          status: 400,
+          message: '資料有誤'
+        })
+      }
+
+      // 取得課程的評價摘要
+      let rating = await RatingSummary.findOne({
+        where: {
+          courseId: courseId
+        },
+        attributes: ['avgRating', 'countRating'],
+        include: [
+          {
+            model: RatingPersonal,
+            attributes: ['content', 'score', 'createdAt'],
+            include: [
+              {
+                model: User,
+                attributes: ['name', 'nickName', 'avatarImagePath']
+              }
+            ]
+          }
+        ]
+      })
+
+      // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
+      if (!rating) {
+        rating = await RatingSummary.create({
+          courseId,
+          avgRating: 0,
+          countRating: 0
+        })
+      }
+
+      res.json({
+        avgRating: rating ? rating.avgRating : 0,
+        countRating: rating ? rating.countRating : 0,
+        ratings: rating
+          ? rating.rating_personals.map((item) => ({
+              name: item.user.name,
+              score: item.score,
+              nickName: item.user.nickName || '',
+              imagePath:
+                process.env.NODE_ENV === 'development'
+                  ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                      item.user.avatarImagePath
+                    }`
+                  : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${item.user.avatarImagePath}`,
+              date: CONVERT.formatDate(item.createdAt),
+              content: item.content || ''
+            }))
+          : []
+      })
     } catch (error) {
       console.error(error)
       res.json(errorTemplateFun(error))

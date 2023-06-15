@@ -83,7 +83,13 @@ exports.course = {
         include: [
           {
             model: RatingPersonal,
-            attributes: ['name', 'number', 'createdAt', 'content']
+            attributes: ['score', 'createdAt', 'content'],
+            include: [
+              {
+                model: User,
+                attributes: ['name', 'nickName', 'avatarImagePath']
+              }
+            ]
           }
         ]
       })
@@ -148,12 +154,34 @@ exports.course = {
           countRating: ratingSummary ? ratingSummary.countRating : 0,
           ratings: ratingSummary
             ? ratingSummary.rating_personals.map((rating) => ({
-                name: rating.name,
-                number: rating.number,
+                name: rating.user.name,
+                score: rating.score,
+                nickName: rating.user.nickName || '',
+                imagePath:
+                  process.env.NODE_ENV === 'development'
+                    ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
+                        rating.user.avatarImagePath
+                      }`
+                    : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiry.user.avatarImagePath}`,
                 date: CONVERT.formatDate(rating.createdAt),
                 content: rating.content || ''
               }))
-            : []
+            : [],
+          star1Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 1).length
+            : 0,
+          star2Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 2).length
+            : 0,
+          star3Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 3).length
+            : 0,
+          star4Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 4).length
+            : 0,
+          star5Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 5).length
+            : 0
         }
       }
 
