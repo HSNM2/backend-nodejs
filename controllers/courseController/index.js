@@ -166,7 +166,22 @@ exports.course = {
                 date: CONVERT.formatDate(rating.createdAt),
                 content: rating.content || ''
               }))
-            : []
+            : [],
+          star1Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 1).length
+            : 0,
+          star2Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 2).length
+            : 0,
+          star3Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 3).length
+            : 0,
+          star4Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 4).length
+            : 0,
+          star5Count: ratingSummary
+            ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 5).length
+            : 0
         }
       }
 
