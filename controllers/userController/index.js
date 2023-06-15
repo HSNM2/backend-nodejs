@@ -672,13 +672,7 @@ exports.rating = {
           summaryId: summaryId,
           userId: userId
         },
-        attributes: ['content', 'score', 'createdAt'],
-        include: [
-          {
-            model: User,
-            attributes: ['name', 'nickName', 'avatarImagePath']
-          }
-        ]
+        attributes: ['content', 'score']
       })
 
       if (!rating) {
@@ -689,17 +683,8 @@ exports.rating = {
       }
 
       res.json({
-        rating: {
-          name: rating.user.name,
+        data: {
           score: rating.score,
-          nickName: rating.user.nickName || '',
-          imagePath:
-            process.env.NODE_ENV === 'development'
-              ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
-                  rating.user.avatarImagePath
-                }`
-              : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${rating.user.avatarImagePath}`,
-          date: CONVERT.formatDate(rating.createdAt),
           content: rating.content || ''
         }
       })
