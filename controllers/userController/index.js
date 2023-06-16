@@ -880,7 +880,7 @@ exports.ratingList = {
       }
 
       // 取得課程的評價摘要
-      let rating = await RatingSummary.findOne({
+      let ratingSummary = await RatingSummary.findOne({
         where: {
           courseId: courseId
         },
@@ -900,8 +900,8 @@ exports.ratingList = {
       })
 
       // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
-      if (!rating) {
-        rating = await RatingSummary.create({
+      if (!ratingSummary) {
+        ratingSummary = await RatingSummary.create({
           courseId,
           avgRating: 0,
           countRating: 0
@@ -909,10 +909,10 @@ exports.ratingList = {
       }
 
       res.json({
-        avgRating: rating ? rating.avgRating : 0,
-        countRating: rating ? rating.countRating : 0,
-        ratings: rating
-          ? rating.rating_personals.map((item) => ({
+        avgRating: ratingSummary ? ratingSummary.avgRating : 0,
+        countRating: ratingSummary ? ratingSummary.countRating : 0,
+        ratings: ratingSummary
+          ? ratingSummary.rating_personals.map((item) => ({
               name: item.user.name,
               score: item.score,
               nickName: item.user.nickName || '',
@@ -925,7 +925,22 @@ exports.ratingList = {
               date: CONVERT.formatDate(item.createdAt),
               content: item.content || ''
             }))
-          : []
+          : [],
+        star1Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 1).length
+          : 0,
+        star2Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 2).length
+          : 0,
+        star3Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 3).length
+          : 0,
+        star4Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 4).length
+          : 0,
+        star5Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 5).length
+          : 0
       })
     } catch (error) {
       console.error(error)
