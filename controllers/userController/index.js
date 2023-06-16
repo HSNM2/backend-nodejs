@@ -272,6 +272,7 @@ exports.courses = {
       for (let i = 0; i < courses.length; i++) {
         const course = courses[i]
 
+        const id = course.id
         const title = course.title
         const image_path = course.image_path
           ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
@@ -292,6 +293,7 @@ exports.courses = {
         }
 
         courseInfo.push({
+          id,
           title,
           image_path,
           rating: ratingSummary,
