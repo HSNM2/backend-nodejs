@@ -5,7 +5,9 @@ const chapter = require('controllers/courseProviderController/chapter')
 const lesson = require('controllers/courseProviderController/lesson')
 const faq = require('controllers/courseProviderController/faq')
 const question = require('controllers/courseProviderController/question')
+const coverPhotoUpload = require('controllers/courseProviderController/coverPhotoUpload')
 const { authJwt, verifyCourseProvide } = require('middleware')
+const { COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
 
 const API_PREFIX = '/course'
 
@@ -237,5 +239,16 @@ router.delete(
   ],
   question.delete
 )
+
+router.post(
+  '/coverPhoto/upload',
+  [
+    authJwt.verifyToken,
+    coverPhotoUpload.uploadMiddleware.single(COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX)
+  ],
+  coverPhotoUpload.post
+)
+
+router.delete('/coverPhoto/upload/:courseId', [authJwt.verifyToken], coverPhotoUpload.delete)
 
 module.exports = router

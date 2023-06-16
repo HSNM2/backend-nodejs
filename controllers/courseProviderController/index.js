@@ -2,6 +2,7 @@ const { Course } = require('models/courses')
 const { User } = require('models/users')
 const { checkUserExist } = require('src/utils/template')
 const { errorTemplateFun } = require('src/utils/template')
+const { URL_PREFIX, COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
 
 exports.courses = {
   get: async (req, res) => {
@@ -23,7 +24,9 @@ exports.courses = {
       const resultCourse = courses.map((course) => ({
         id: course.id,
         title: course.title,
-        image_page: course.image_page,
+        image_path: course.image_path
+          ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+          : null,
         isPublish: course.isPublish
       }))
 
@@ -58,7 +61,9 @@ exports.course = {
             originPrice: course.originPrice,
             title: course.title,
             tag: course.tag,
-            image_page: course.image_page,
+            image_path: course.image_path
+              ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+              : null,
             link: course.link,
             subTitle: course.subTitle,
             description: course.description,

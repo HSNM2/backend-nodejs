@@ -5,11 +5,7 @@ console.log(`=== Rating_Personals Model Create ===`)
 
 let RatingPersonal = null
 RatingPersonal = db.define('rating_personals', {
-  name: {
-    allowNull: false,
-    type: DataTypes.STRING
-  },
-  number: {
+  score: {
     allowNull: false,
     type: DataTypes.INTEGER
   },

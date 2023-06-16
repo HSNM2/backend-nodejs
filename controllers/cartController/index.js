@@ -8,9 +8,15 @@ const {
   create_mpg_sha_encrypt,
   create_mpg_aes_decrypt
 } = require('src/utils/crypt')
-const { getCourseData } = require('./cartOperations')
+const { getAllCourseByArray } = require('src/utils/courseUtils')
 const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
+const { CONVERT } = require('src/utils/format')
+
+const cartMessages = {
+  empty: '您的購物車是空的，前往探索吧！',
+  invalid: '購物車中有無效的課程ID'
+}
 
 exports.cartList = {
   post: async (req, res) => {
@@ -28,7 +34,11 @@ exports.cartList = {
         'provider'
       ]
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArray(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({
@@ -60,7 +70,11 @@ exports.order = {
 
       const attributes = ['id', 'title', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArray(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({
@@ -70,9 +84,14 @@ exports.order = {
       }
 
       // 商品詳細，限制50字元
-      const itemDesc = courseData.map((course) => course.title)
-      const mergedDesc = itemDesc.join(', ')
-      const limitedDesc = mergedDesc.substring(0, 50)
+      let limitedDesc
+      if (courseData.length > 0) {
+        const itemDesc = courseData.map((course) => course.title)
+        const mergedDesc = itemDesc.join(', ')
+        limitedDesc = mergedDesc.substring(0, 50)
+      } else {
+        limitedDesc = ''
+      }
 
       const totalPrice = calculateTotalPrice(courseData)
 
@@ -130,7 +149,11 @@ exports.createOrder = {
 
       const attributes = ['id', 'price', 'originPrice']
 
-      const { status, message, courseData } = await getCourseData(courseIds, attributes)
+      const { status, message, courseData } = await getAllCourseByArray(
+        courseIds,
+        attributes,
+        cartMessages
+      )
 
       if (status === 400) {
         return res.json({
@@ -232,6 +255,68 @@ exports.notify = {
       }
 
       return res.end()
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
+
+exports.orderReceipt = {
+  post: async (req, res) => {
+    try {
+      const response = req.body
+
+      const thisShaEncrypt = create_mpg_sha_encrypt(response.TradeInfo)
+      // 使用 HASH 再次 SHA 加密字串，確保比對一致（確保不正確的請求觸發交易成功）
+      if (!thisShaEncrypt === response.TradeSha) {
+        console.log('付款失敗：TradeSha 不一致')
+        return res.end()
+      }
+
+      // 解密交易內容
+      const data = create_mpg_aes_decrypt(response.TradeInfo)
+
+      const order = await Order.findOne({
+        where: {
+          merchantOrderNo: data.Result.MerchantOrderNo
+        }
+      })
+
+      if (!order) {
+        res.json({
+          status: 404,
+          message: '找不到訂單'
+        })
+      }
+
+      const orderDetails = await OrderDetail.findAll({
+        where: {
+          orderId: order.id
+        },
+        attributes: ['courseId']
+      })
+
+      if (orderDetails.length <= 0) {
+        res.json({
+          status: 404,
+          message: '找不到訂單明細'
+        })
+      }
+
+      const returnData = {
+        orderNumber: data.Result.MerchantOrderNo,
+        orderDate: CONVERT.formatDate(order.createdAt),
+        orderAmount: data.Result.Amt,
+        orderPaymentType: data.Result.PaymentType,
+        orderDetail: orderDetails[0]
+      }
+
+      const redirectUrl = `https://sweettime.tw/shoppingCart/OrderCheckoutInfo/?data=${encodeURIComponent(
+        JSON.stringify(returnData)
+      )}`
+
+      res.status(302).redirect(redirectUrl)
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
