@@ -13,7 +13,12 @@ let bcrypt = require('bcryptjs')
 const { generateUserId } = require('src/js/generate')
 const { identityValidate } = require('src/js/validate')
 const { IDENTITY } = require('src/constants/identityMapping')
-const { USER_AVATAR_FOLDER_PREFIX, COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
+const {
+  URL_PREFIX,
+  COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX,
+  USER_AVATAR_FOLDER_PREFIX,
+  COURSE_PROVIDER_VIDEO_FOLDER_PREFIX
+} = require('src/js/url')
 const { getAllCourseByArray } = require('src/utils/courseUtils')
 
 const { Op } = require('sequelize')
@@ -248,6 +253,58 @@ exports.course = {
             chapters
           }
         ]
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.courses = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+      const user = await User.findByPk(userId)
+      const courses = await user.getCourses()
+
+      const courseInfo = []
+      for (let i = 0; i < courses.length; i++) {
+        const course = courses[i]
+
+        const title = course.title
+        const image_path = course.image_path
+          ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+          : null
+        const teacher = await User.findByPk(course.teacherId)
+        const chapters = await course.getChapters()
+        const ratingSummary = await course.getRating_summary({
+          attributes: ['avgRating', 'countRating']
+        })
+
+        let lessonsInfo = []
+        for (let j = 0; j < chapters.length; j++) {
+          const chapter = chapters[j]
+          const lessons = await chapter.getLessons({
+            attributes: ['id', 'title', 'isPublish']
+          })
+          lessonsInfo = lessons
+        }
+
+        courseInfo.push({
+          title,
+          image_path,
+          rating: ratingSummary,
+          teacherName: teacher.name,
+          lessons: lessonsInfo
+        })
+      }
+
+      return res.json({
+        status: true,
+        data: {
+          courses: courseInfo
+        }
       })
     } catch (error) {
       console.error(error)
