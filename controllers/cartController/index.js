@@ -304,14 +304,19 @@ exports.orderReceipt = {
         })
       }
 
-      res.json({
-        status: true,
+      const returnData = {
         orderNumber: data.Result.MerchantOrderNo,
         orderDate: CONVERT.formatDate(order.createdAt),
         orderAmount: data.Result.Amt,
         orderPaymentType: data.Result.PaymentType,
         orderDetail: orderDetails[0]
-      })
+      }
+
+      const redirectUrl = `https://sweettime.tw/shoppingCart/OrderCheckoutInfo/?data=${encodeURIComponent(
+        JSON.stringify(returnData)
+      )}`
+
+      res.status(302).redirect(redirectUrl)
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
