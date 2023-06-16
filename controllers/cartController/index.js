@@ -11,6 +11,7 @@ const {
 const { getAllCourseByArray } = require('src/utils/courseUtils')
 const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
+const { CONVERT } = require('src/utils/format')
 
 const cartMessages = {
   empty: '您的購物車是空的，前往探索吧！',
@@ -254,6 +255,63 @@ exports.notify = {
       }
 
       return res.end()
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
+
+exports.orderReceipt = {
+  post: async (req, res) => {
+    try {
+      const response = req.body
+
+      const thisShaEncrypt = create_mpg_sha_encrypt(response.TradeInfo)
+      // 使用 HASH 再次 SHA 加密字串，確保比對一致（確保不正確的請求觸發交易成功）
+      if (!thisShaEncrypt === response.TradeSha) {
+        console.log('付款失敗：TradeSha 不一致')
+        return res.end()
+      }
+
+      // 解密交易內容
+      const data = create_mpg_aes_decrypt(response.TradeInfo)
+
+      const order = await Order.findOne({
+        where: {
+          merchantOrderNo: data.Result.MerchantOrderNo
+        }
+      })
+
+      if (!order) {
+        res.json({
+          status: 404,
+          message: '找不到訂單'
+        })
+      }
+
+      const orderDetails = await OrderDetail.findAll({
+        where: {
+          orderId: order.id
+        },
+        attributes: ['courseId']
+      })
+
+      if (orderDetails.length <= 0) {
+        res.json({
+          status: 404,
+          message: '找不到訂單明細'
+        })
+      }
+
+      res.json({
+        status: true,
+        orderNumber: data.Result.MerchantOrderNo,
+        orderDate: CONVERT.formatDate(order.createdAt),
+        orderAmount: data.Result.Amt,
+        orderPaymentType: data.Result.PaymentType,
+        orderDetail: orderDetails[0]
+      })
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
