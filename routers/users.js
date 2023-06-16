@@ -9,6 +9,7 @@ router.post('/login', userController.login.post)
 router.post('/logout', [authJwt.verifyToken], userController.logout.post)
 router.post('/forgetPassword', userController.forgetPassword.post)
 router.get('/course/:courseid', [authJwt.verifyToken], userController.course.get)
+router.get('/courses', [authJwt.verifyToken], userController.courses.get)
 router.get('/profile', [authJwt.verifyToken], userController.profile.get)
 router.patch('/profile', [authJwt.verifyToken], userController.profile.patch)
 router.post(
