@@ -271,16 +271,29 @@ exports.courses = {
       const courseInfo = []
       for (let i = 0; i < courses.length; i++) {
         const course = courses[i]
+        const summaryRating = await RatingSummary.findOne({
+          attributes: ['id'],
+          where: {
+            courseId: course.id
+          }
+        })
 
+        const courseRatingByUser = summaryRating
+          ? await RatingPersonal.findOne({
+              where: {
+                summaryId: summaryRating.id,
+                userId: userId
+              }
+            })
+          : null
+
+        const id = course.id
         const title = course.title
         const image_path = course.image_path
           ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
           : null
         const teacher = await User.findByPk(course.teacherId)
         const chapters = await course.getChapters()
-        const ratingSummary = await course.getRating_summary({
-          attributes: ['avgRating', 'countRating']
-        })
 
         let lessonsInfo = []
         for (let j = 0; j < chapters.length; j++) {
@@ -292,9 +305,10 @@ exports.courses = {
         }
 
         courseInfo.push({
+          id,
           title,
           image_path,
-          rating: ratingSummary,
+          rating: courseRatingByUser ? courseRatingByUser.score : null,
           teacherName: teacher.name,
           lessons: lessonsInfo
         })
