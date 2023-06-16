@@ -798,20 +798,21 @@ exports.rating = {
         })
       }
 
-      const ratingSummary = await RatingSummary.findOne({
+      const summary = await RatingSummary.findOne({
         where: {
           courseId: courseId
-        }
+        },
+        attributes: ['id', 'avgRating', 'countRating']
       })
 
-      if (!ratingSummary) {
+      if (!summary) {
         return res.json({
           status: 400,
           message: '資料不存在'
         })
       }
 
-      const summaryId = ratingSummary.id
+      const summaryId = summary.id
       let rating = await RatingPersonal.findOne({
         where: {
           summaryId: summaryId,
@@ -838,6 +839,22 @@ exports.rating = {
           }
         }
       )
+
+      // 計算新的平均評分和更新評價總人數
+      const ratings = await RatingPersonal.findAll({
+        where: {
+          summaryId: summary.id
+        },
+        attributes: ['score']
+      })
+
+      const totalRatings = ratings.length
+      const totalScores = ratings.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
+      const avgRating = totalScores / totalRatings
+
+      // 更新 RatingSummary 的資料
+      summary.avgRating = avgRating
+      await summary.save()
 
       res.json({
         status: 200,
