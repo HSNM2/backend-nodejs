@@ -650,7 +650,7 @@ exports.rating = {
         })
       }
 
-      let summary = await RatingSummary.findOne({
+      let ratingSummary = await RatingSummary.findOne({
         where: {
           courseId: courseId
         },
@@ -658,8 +658,8 @@ exports.rating = {
       })
 
       // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
-      if (!summary) {
-        summary = await RatingSummary.create({
+      if (!ratingSummary) {
+        ratingSummary = await RatingSummary.create({
           courseId,
           avgRating: 0,
           countRating: 0
@@ -669,7 +669,7 @@ exports.rating = {
       // 判別是否已評分過
       const existingRating = await RatingPersonal.findOne({
         where: {
-          summaryId: summary.id,
+          summaryId: ratingSummary.id,
           userId: userId
         }
       })
@@ -681,29 +681,29 @@ exports.rating = {
         })
       }
 
-      const ratingPersonal = await RatingPersonal.create({
+      await RatingPersonal.create({
         content,
         score,
-        summaryId: summary.id,
+        summaryId: ratingSummary.id,
         userId
       })
 
       // 計算新的平均評分和更新評價總人數
-      const ratings = await RatingPersonal.findAll({
+      const ratingPersonals = await RatingPersonal.findAll({
         where: {
-          summaryId: summary.id
+          summaryId: ratingSummary.id
         },
         attributes: ['score']
       })
 
-      const totalRatings = ratings.length
-      const totalScores = ratings.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
+      const totalRatings = ratingPersonals.length
+      const totalScores = ratingPersonals.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
       const avgRating = totalScores / totalRatings
 
       // 更新 RatingSummary 的資料
-      summary.avgRating = avgRating
-      summary.countRating = totalRatings
-      await summary.save()
+      ratingSummary.avgRating = avgRating
+      ratingSummary.countRating = totalRatings
+      await ratingSummary.save()
 
       return res.json({
         status: 200,
@@ -737,10 +737,10 @@ exports.rating = {
           message: '資料不存在'
         })
       }
-      const summaryId = ratingSummary.id
+
       let rating = await RatingPersonal.findOne({
         where: {
-          summaryId: summaryId,
+          summaryId: ratingSummary.id,
           userId: userId
         },
         attributes: ['content', 'score']
@@ -801,7 +801,8 @@ exports.rating = {
       const ratingSummary = await RatingSummary.findOne({
         where: {
           courseId: courseId
-        }
+        },
+        attributes: ['id', 'avgRating', 'countRating']
       })
 
       if (!ratingSummary) {
@@ -811,16 +812,15 @@ exports.rating = {
         })
       }
 
-      const summaryId = ratingSummary.id
-      let rating = await RatingPersonal.findOne({
+      let ratingPersonal = await RatingPersonal.findOne({
         where: {
-          summaryId: summaryId,
+          summaryId: ratingSummary.id,
           userId: userId
         },
         attributes: ['id', 'content', 'score']
       })
 
-      if (!rating) {
+      if (!ratingPersonal) {
         return res.json({
           status: 200,
           message: '使用者尚未評價該課程'
@@ -834,10 +834,26 @@ exports.rating = {
         },
         {
           where: {
-            id: rating.id
+            id: ratingPersonal.id
           }
         }
       )
+
+      // 計算新的平均評分和更新評價總人數
+      const ratingPersonals = await RatingPersonal.findAll({
+        where: {
+          summaryId: ratingSummary.id
+        },
+        attributes: ['score']
+      })
+
+      const totalRatings = ratingPersonals.length
+      const totalScores = ratingPersonals.reduce((sum, rating) => sum + parseFloat(rating.score), 0)
+      const avgRating = totalScores / totalRatings
+
+      // 更新 RatingSummary 的資料
+      ratingSummary.avgRating = avgRating
+      await ratingSummary.save()
 
       res.json({
         status: 200,
@@ -863,7 +879,7 @@ exports.ratingList = {
       }
 
       // 取得課程的評價摘要
-      let rating = await RatingSummary.findOne({
+      let ratingSummary = await RatingSummary.findOne({
         where: {
           courseId: courseId
         },
@@ -883,8 +899,8 @@ exports.ratingList = {
       })
 
       // 如果評價摘要不存在，則創建一個新的評價摘要並與課程關聯起來
-      if (!rating) {
-        rating = await RatingSummary.create({
+      if (!ratingSummary) {
+        ratingSummary = await RatingSummary.create({
           courseId,
           avgRating: 0,
           countRating: 0
@@ -892,10 +908,10 @@ exports.ratingList = {
       }
 
       res.json({
-        avgRating: rating ? rating.avgRating : 0,
-        countRating: rating ? rating.countRating : 0,
-        ratings: rating
-          ? rating.rating_personals.map((item) => ({
+        avgRating: ratingSummary ? ratingSummary.avgRating : 0,
+        countRating: ratingSummary ? ratingSummary.countRating : 0,
+        ratings: ratingSummary
+          ? ratingSummary.rating_personals.map((item) => ({
               name: item.user.name,
               score: item.score,
               nickName: item.user.nickName || '',
@@ -908,7 +924,22 @@ exports.ratingList = {
               date: CONVERT.formatDate(item.createdAt),
               content: item.content || ''
             }))
-          : []
+          : [],
+        star1Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 1).length
+          : 0,
+        star2Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 2).length
+          : 0,
+        star3Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 3).length
+          : 0,
+        star4Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 4).length
+          : 0,
+        star5Count: ratingSummary
+          ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 5).length
+          : 0
       })
     } catch (error) {
       console.error(error)
