@@ -883,12 +883,11 @@ exports.rating = {
 exports.ratingList = {
   get: async (req, res) => {
     try {
-      const { userId } = req
       const courseId = req.params.courseid
-      if (!userId || !courseId) {
+      if (!courseId) {
         return res.json({
           status: 400,
-          message: '資料有誤'
+          message: '找不到課程ID'
         })
       }
 
