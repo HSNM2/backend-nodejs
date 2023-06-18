@@ -132,9 +132,9 @@ exports.course = {
             imagePath:
               process.env.NODE_ENV === 'development'
                 ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
-                    inquiry.user.avatarImagePath
+                    inquiryRes.user.avatarImagePath
                   }`
-                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiry.user.avatarImagePath}`,
+                : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiryRes.user.avatarImagePath}`,
             date: CONVERT.formatDate(inquiryRes.createdAt),
             content: inquiryRes.content
           }))
@@ -162,7 +162,7 @@ exports.course = {
                     ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${
                         rating.user.avatarImagePath
                       }`
-                    : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${inquiry.user.avatarImagePath}`,
+                    : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${rating.user.avatarImagePath}`,
                 date: CONVERT.formatDate(rating.createdAt),
                 content: rating.content || ''
               }))
