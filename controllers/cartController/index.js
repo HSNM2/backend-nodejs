@@ -192,7 +192,7 @@ exports.createOrder = {
         }
       }
 
-      res.end()
+      return res.end()
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
@@ -253,8 +253,6 @@ exports.notify = {
           message: '找不到對應的訂單'
         })
       }
-
-      return res.end()
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
@@ -284,10 +282,7 @@ exports.orderReceipt = {
       })
 
       if (!order) {
-        res.json({
-          status: 404,
-          message: '找不到訂單'
-        })
+        return res.end()
       }
 
       const orderDetails = await OrderDetail.findAll({
@@ -298,10 +293,7 @@ exports.orderReceipt = {
       })
 
       if (orderDetails.length <= 0) {
-        res.json({
-          status: 404,
-          message: '找不到訂單明細'
-        })
+        return res.end()
       }
 
       const returnData = {
