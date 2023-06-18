@@ -432,10 +432,11 @@ exports.getFavorite = {
         attributes: ['favorite']
       })
 
-      if (!userFavorite.favorite) {
+      if (!userFavorite || !userFavorite.favorite) {
         return res.json({
           status: false,
-          message: '尚未有任何收藏課程'
+          message: '尚未有任何收藏課程',
+          data: []
         })
       }
 
@@ -461,10 +462,11 @@ exports.favoriteCourse = {
         attributes: ['favorite']
       })
 
-      if (!userFavorite.favorite) {
+      if (!userFavorite || !userFavorite.favorite) {
         return res.json({
           status: false,
-          message: '尚未有任何收藏課程'
+          message: '尚未有任何收藏課程',
+          data: []
         })
       }
 
