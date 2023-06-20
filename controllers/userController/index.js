@@ -503,8 +503,8 @@ exports.favoriteCourse = {
         const rating = ratings.find((r) => r.courseId === course.id)
         const imagePath =
           process.env.NODE_ENV === 'development'
-            ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${course.image_path}`
-            : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${course.image_path}`
+            ? `http://localhost:${process.env.PORT || 3002}/static/coverPhoto/${course.image_path}`
+            : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
 
         return {
           ...course.dataValues,
