@@ -16,12 +16,16 @@ const CONVERT = {
       day: '2-digit'
     })
 
-    const formattedTime = localDate.toLocaleTimeString('zh-TW', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    })
-
+    const formattedHours = localDate.getHours() % 24 // 取得 24 小時制的小時數
+    const formattedTime = localDate
+      .toLocaleTimeString('zh-TW', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      })
+      .replace(/^(\d{1,2}):/, (match, p1) => {
+        return formattedHours === 0 ? '00:' : p1 + ':' // 如果小時數為 0，則替換為 00
+      })
     return `${formattedDate} ${formattedTime}`
   }
 }
