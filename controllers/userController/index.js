@@ -501,8 +501,14 @@ exports.favoriteCourse = {
 
       const mergedData = courseData.map((course) => {
         const rating = ratings.find((r) => r.courseId === course.id)
+        const imagePath =
+          process.env.NODE_ENV === 'development'
+            ? `http://localhost:${process.env.PORT || 3002}/static/avatar/${course.image_path}`
+            : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${USER_AVATAR_FOLDER_PREFIX}/${course.image_path}`
+
         return {
           ...course.dataValues,
+          image_path: imagePath,
           avgRating: rating ? rating.avgRating : 0,
           countRating: rating ? rating.countRating : 0
         }
