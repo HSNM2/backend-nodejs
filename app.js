@@ -19,6 +19,10 @@ const corsOption = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization']
 }
+const API_PREFIX = '/api'
+
+// NOTE: 因 line 的 message api 不能先經過 bodyParse，因此提取至此
+app.use(`${API_PREFIX}/line`, lineRouter)
 
 app.use(cookieParser())
 app.use(cors(corsOption))
@@ -26,14 +30,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/static', express.static(__dirname + '/uploads'))
 
-const API_PREFIX = '/api'
 app.use(`${API_PREFIX}`, commonRouter)
 app.use(`${API_PREFIX}/user`, usersRouter)
 app.use(`${API_PREFIX}/courseProvider`, courseProviderRouter)
 app.use(`${API_PREFIX}/courses`, coursesRouter)
 app.use(`${API_PREFIX}/course`, courseRouter)
 app.use(`${API_PREFIX}/cart`, cartRouter)
-app.use(`${API_PREFIX}/line`, lineRouter)
 
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
