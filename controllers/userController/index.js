@@ -5,6 +5,8 @@ const { Lesson } = require('models/lessons')
 const { UserFavorite } = require('models/user_favorites')
 const { RatingSummary } = require('models/rating_summarys')
 const { RatingPersonal } = require('models/rating_personals')
+const { Order } = require('models/orders')
+const { OrderDetail } = require('models/order_details')
 const { errorTemplateFun } = require('src/utils/template')
 const { CONVERT } = require('src/utils/format')
 
@@ -961,6 +963,71 @@ exports.ratingList = {
         star5Count: ratingSummary
           ? ratingSummary.rating_personals.filter((rating) => parseInt(rating.score) === 5).length
           : 0
+      })
+    } catch (error) {
+      console.error(error)
+      res.json(errorTemplateFun(error))
+    }
+  }
+}
+
+exports.orders = {
+  get: async (req, res) => {
+    try {
+      const { userId } = req
+
+      const orders = await Order.findAll({
+        where: {
+          userId: userId
+        },
+        attributes: ['id', 'amt', 'createdAt', 'merchantOrderNo', 'isPurchased', 'paymentType'],
+        include: [
+          {
+            model: OrderDetail,
+            attributes: ['originalPrice', 'discount', 'courseId'],
+            include: [
+              {
+                model: Course,
+                attributes: ['title', 'image_path']
+              }
+            ]
+          }
+        ],
+        order: [['createdAt', 'DESC']]
+      })
+
+      const mergedData = orders.map((order) => {
+        const orderData = order.toJSON()
+        const orderDetails = orderData.order_details.map((detail) => {
+          const courseImg = detail.course.image_path
+          const imagePath =
+            process.env.NODE_ENV === 'development'
+              ? `http://localhost:${process.env.PORT || 3002}/static/coverPhoto/${courseImg}`
+              : `https://${process.env.CLOUDFRONT_AVATAR_BUCKET_URL}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${courseImg}`
+
+          return {
+            ...detail,
+            course: {
+              ...detail.course,
+              image_path: imagePath
+            }
+          }
+        })
+
+        return {
+          id: orderData.id,
+          amt: orderData.amt,
+          merchantOrderNo: orderData.merchantOrderNo,
+          isPurchased: orderData.isPurchased,
+          paymentType: orderData.paymentType ? orderData.paymentType : '尚未付款',
+          orderTime: CONVERT.formatDate(orderData.createdAt),
+          order_details: orderDetails
+        }
+      })
+
+      return res.json({
+        status: 200,
+        data: mergedData
       })
     } catch (error) {
       console.error(error)

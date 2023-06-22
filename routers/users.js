@@ -29,5 +29,6 @@ router.get('/course/:courseid/ratings', userController.ratingList.get)
 router.post('/course/:courseid/rating', [authJwt.verifyToken], userController.rating.post)
 router.get('/course/:courseid/rating', [authJwt.verifyToken], userController.rating.get)
 router.patch('/course/:courseid/rating', [authJwt.verifyToken], userController.rating.patch)
+router.get('/orders', [authJwt.verifyToken], userController.orders.get)
 
 module.exports = router

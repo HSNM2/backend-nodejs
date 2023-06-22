@@ -56,6 +56,8 @@ RatingPersonal.belongsTo(RatingSummary, { foreignKey: 'summaryId' })
 // order
 Order.hasMany(OrderDetail, { foreignKey: 'orderId' })
 OrderDetail.belongsTo(Order, { foreignKey: 'orderId' })
+Course.hasMany(OrderDetail, { foreignKey: 'courseId' })
+OrderDetail.belongsTo(Course, { foreignKey: 'courseId' })
 
 // 查看是否關聯
 // const hasChapterLessonAssociation = Course.hasOne(Chapter)
