@@ -1,5 +1,26 @@
 const crypto = require('crypto')
+const line = require('@line/bot-sdk')
 const { errorTemplateFun } = require('src/utils/template')
+
+const client = new line.Client({
+  channelID: process.env.LINE_CHANNEL_ID,
+  channelSecret: process.env.LINE_CHANNEL_SECRET,
+  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN
+})
+
+function handleEvent(event) {
+  console.log(`handleEvent / e: `, event)
+  let reply = {
+    type: 'text',
+    text: `你剛才說了「${event.message.text}」`
+  }
+
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    reply.text = `發過來訊息的種類為「${event.type}」，我看不懂`
+  }
+
+  return client.replayMessage(event.replayToken, reply)
+}
 
 exports.webhook = {
   post: async (req, res) => {
@@ -24,13 +45,8 @@ exports.webhook = {
       })
     }
 
-    console.log(`Message: `, req.body.events[0])
+    console.log(`All events: `, req.body.events)
 
-    return res.json({
-      status: 200,
-      data: {
-        message: 'Line Webhook'
-      }
-    })
+    return res.json(handleEvent(req.body.events[0]))
   }
 }
