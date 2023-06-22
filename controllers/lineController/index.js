@@ -19,7 +19,7 @@ function handleEvent(event) {
     reply.text = `發過來訊息的種類為「${event.type}」，我看不懂`
   }
 
-  return client.replayMessage(event.replayToken, reply)
+  return client.replyMessage(event.replayToken, reply)
 }
 
 exports.webhook = {
