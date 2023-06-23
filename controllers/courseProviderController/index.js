@@ -123,6 +123,68 @@ exports.course = {
 
       const course = await Course.findByPk(courseid)
 
+      if (!title) {
+        return res.status(400).json({
+          status: false,
+          message: '標題未填'
+        })
+      }
+
+      if (!originPrice) {
+        return res.status(400).json({
+          status: false,
+          message: '原價未填'
+        })
+      }
+
+      if (!description) {
+        return res.status(400).json({
+          status: false,
+          message: '課程簡介未填'
+        })
+      }
+
+      if (!category) {
+        return res.status(400).json({
+          status: false,
+          message: '課程類型未填'
+        })
+      }
+      if (!type) {
+        return res.status(400).json({
+          status: false,
+          message: '細節種類未填'
+        })
+      }
+
+      if (!link) {
+        return res.status(400).json({
+          status: false,
+          message: '影片連結未填'
+        })
+      }
+
+      if (!image_path) {
+        return res.status(400).json({
+          status: false,
+          message: '封面照未填'
+        })
+      }
+
+      if (!tag) {
+        return res.status(400).json({
+          status: false,
+          message: '標籤最少填寫一個'
+        })
+      }
+
+      if (!courseStatus) {
+        return res.status(400).json({
+          status: false,
+          message: '課程公開模式未填'
+        })
+      }
+
       const result = await course.update({
         title,
         subTitle,
