@@ -11,8 +11,8 @@ const client = new line.Client({
 function handleEvent(event) {
   console.log(`handleEvent / e: `, event)
 
-  if (message.emojis) {
-    console.log(`emojis: `, emojis)
+  if (event.message.emojis) {
+    console.log(`emojis: `, event.message.emojis)
   }
 
   let reply = {
