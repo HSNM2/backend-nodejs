@@ -19,7 +19,10 @@ function handleEvent(event) {
     reply.text = `發過來訊息的種類為「${event.type}」，我看不懂`
   }
 
-  console.log(``)
+  const userId = event.source.userId
+  client.getProfile(userId).then((profile) => {
+    console.log('User profile: ', profile.displayName, profile.pictureUrl)
+  })
 
   return client.replyMessage(event.replyToken, reply)
 }
