@@ -10,6 +10,11 @@ const client = new line.Client({
 
 function handleEvent(event) {
   console.log(`handleEvent / e: `, event)
+
+  if (message.emojis) {
+    console.log(`emojis: `, emojis)
+  }
+
   let reply = {
     type: 'text',
     text: `你剛才說了「${event.message.text}」`
