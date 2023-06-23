@@ -121,8 +121,6 @@ exports.course = {
         category
       } = req.body
 
-      const course = await Course.findByPk(courseid)
-
       if (!title) {
         return res.status(400).json({
           status: false,
@@ -184,6 +182,8 @@ exports.course = {
           message: '課程公開模式未填'
         })
       }
+
+      const course = await Course.findByPk(courseid)
 
       const result = await course.update({
         title,
