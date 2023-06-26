@@ -174,6 +174,16 @@ exports.profile = {
 
     try {
       const { userId } = req
+
+      const phoneRegex = /^09\d{8}$/ // 以09開頭，後面跟着8個数字
+
+      if (!phone || !phoneRegex.test(phone)) {
+        return res.status(400).json({
+          status: 400,
+          message: '手機號碼格式不正確'
+        })
+      }
+
       const user = await User.findByPk(userId)
 
       if (!user) {
