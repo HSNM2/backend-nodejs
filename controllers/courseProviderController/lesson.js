@@ -6,6 +6,7 @@ const multer = require('multer')
 const { COURSE_PROVIDER_VIDEO_FOLDER_PREFIX } = require('src/js/url')
 
 const fileFilter = (req, file, cb) => {
+  console.log(`fileFilter / file: `, file)
   if (file.mimetype.split('/')[0] === 'video') {
     cb(null, true)
   } else {
@@ -43,6 +44,7 @@ module.exports = {
   },
   post: async (req, res) => {
     try {
+      console.log(`upload Video`)
       const { chapterid } = req.params
       const { title } = req.body
       const chapter = await Chapter.findByPk(chapterid)
