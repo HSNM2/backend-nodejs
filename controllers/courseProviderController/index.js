@@ -162,13 +162,6 @@ exports.course = {
         })
       }
 
-      if (!image_path) {
-        return res.status(400).json({
-          status: false,
-          message: '封面照未填'
-        })
-      }
-
       if (!tag) {
         return res.status(400).json({
           status: false,
@@ -239,14 +232,42 @@ exports.course = {
 
       const course = await Course.findByPk(courseid)
 
-      const result = await course.update({
-        isPublish: true
-      })
+      const fieldNames = {
+        originPrice: '原價',
+        title: '課程名稱',
+        tag: '標籤',
+        image_path: '封面圖片',
+        link: '介紹影片',
+        subTitle: '課程副標題',
+        description: '課程簡介',
+        courseStatus: '課程分類',
+        type: '課程類型',
+        category: '細節種類'
+      }
 
-      if (result) {
-        res.json({
-          status: true,
-          message: '課程上架成功'
+      const emptyFields = []
+      for (const field of Object.keys(fieldNames)) {
+        if (!course[field]) {
+          emptyFields.push(fieldNames[field])
+        }
+      }
+
+      if (emptyFields.length === 0) {
+        const result = await course.update({
+          isPublish: true
+        })
+
+        if (result) {
+          res.json({
+            status: true,
+            message: '課程上架成功'
+          })
+        }
+      } else {
+        const fieldNamesString = emptyFields.join('、')
+        return res.status(400).json({
+          status: 400,
+          message: `課程資訊不得空白，尚有 ${fieldNamesString} 等未填。`
         })
       }
     } catch (error) {
