@@ -162,13 +162,6 @@ exports.course = {
         })
       }
 
-      if (!image_path) {
-        return res.status(400).json({
-          status: false,
-          message: '封面照未填'
-        })
-      }
-
       if (!tag) {
         return res.status(400).json({
           status: false,
