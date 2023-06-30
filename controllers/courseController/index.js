@@ -69,7 +69,8 @@ exports.courseChapter = {
         include: [
           {
             model: Lesson,
-            attributes: ['id', 'title', 'videoPath']
+            attributes: ['id', 'title', 'videoPath'],
+            where: { isPublish: true }
           }
         ]
       })
