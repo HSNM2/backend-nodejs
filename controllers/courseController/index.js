@@ -195,7 +195,8 @@ exports.courseFaq = {
         include: [
           {
             model: ClassFaqQuestion,
-            attributes: ['id', 'title', 'content', 'publish']
+            attributes: ['id', 'title', 'content', 'publish'],
+            where: { publish: true }
           }
         ]
       })
