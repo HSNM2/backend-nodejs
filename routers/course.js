@@ -15,5 +15,6 @@ router.post(
   [authJwt.verifyToken],
   courseController.inquiryAnswer.post
 )
+router.post('/courseIsExist', courseController.isExist.post)
 
 module.exports = router

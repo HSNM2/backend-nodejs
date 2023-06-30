@@ -369,3 +369,22 @@ exports.inquiryAnswer = {
     }
   }
 }
+
+exports.isExist = {
+  post: async (req, res) => {
+    const { courseId } = req.body
+    try {
+      const course = await Course.findOne({
+        where: { id: courseId }
+      })
+
+      res.json({
+        status: 200,
+        isPublish: course ? course.isPublish : false
+      })
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
