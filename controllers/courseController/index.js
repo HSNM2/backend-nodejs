@@ -69,7 +69,8 @@ exports.courseChapter = {
         include: [
           {
             model: Lesson,
-            attributes: ['id', 'title', 'videoPath']
+            attributes: ['id', 'title', 'videoPath'],
+            where: { isPublish: true }
           }
         ]
       })
@@ -194,7 +195,8 @@ exports.courseFaq = {
         include: [
           {
             model: ClassFaqQuestion,
-            attributes: ['id', 'title', 'content', 'publish']
+            attributes: ['id', 'title', 'content', 'publish'],
+            where: { publish: true }
           }
         ]
       })
@@ -361,6 +363,25 @@ exports.inquiryAnswer = {
       message: '回覆成功'
     })
     try {
+    } catch (error) {
+      console.log(error)
+      errorTemplateFun(error)
+    }
+  }
+}
+
+exports.isExist = {
+  post: async (req, res) => {
+    const { courseId } = req.body
+    try {
+      const course = await Course.findOne({
+        where: { id: courseId }
+      })
+
+      res.json({
+        status: 200,
+        isPublish: course ? course.isPublish : false
+      })
     } catch (error) {
       console.log(error)
       errorTemplateFun(error)
