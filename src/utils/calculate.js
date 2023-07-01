@@ -3,11 +3,7 @@ const calculateTotalPrice = (courseData) => {
   if (!courseData) return totalPrice
 
   courseData.forEach((course) => {
-    if (course.price < course.originPrice) {
-      totalPrice += course.price
-    } else {
-      totalPrice += course.originPrice
-    }
+    totalPrice += course.price
   })
 
   return totalPrice
