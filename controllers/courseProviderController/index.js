@@ -233,7 +233,7 @@ exports.course = {
       const course = await Course.findByPk(courseid)
 
       const fieldNames = {
-        originPrice: '原價',
+        price: '銷售價格',
         title: '課程名稱',
         tag: '標籤',
         image_path: '封面圖片',
