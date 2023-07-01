@@ -128,11 +128,19 @@ exports.course = {
         })
       }
 
-      if (originPrice === null || originPrice === undefined) {
-        return res.status(400).json({
-          status: false,
-          message: '原價未填'
-        })
+      if (courseStatus === '1') {
+        if (price === 0 || price === '0') {
+          return res.status(400).json({
+            status: false,
+            message: '銷售價格不得為0元'
+          })
+        }
+        if (originPrice !== 0 && originPrice !== '0' && originPrice < price) {
+          return res.status(400).json({
+            status: false,
+            message: '原價不得小於銷售價格'
+          })
+        }
       }
 
       if (!description) {
