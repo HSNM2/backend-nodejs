@@ -12,6 +12,7 @@ const { getAllCourseByArray } = require('src/utils/courseUtils')
 const { calculateTotalPrice } = require('src/utils/calculate')
 const { errorTemplateFun } = require('src/utils/template')
 const { CONVERT } = require('src/utils/format')
+const { URL_PREFIX, COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
 
 const cartMessages = {
   empty: '您的購物車是空的，前往探索吧！',
@@ -49,10 +50,27 @@ exports.cartList = {
 
       const totalPrice = calculateTotalPrice(courseData)
 
+      const responseData = {
+        data: courseData.map((course) => {
+          return {
+            id: course.id,
+            title: course.title,
+            price: course.price,
+            originPrice: course.originPrice,
+            link: course.link,
+            image_path: course.image_path
+              ? `${URL_PREFIX}/${COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX}/${course.image_path}`
+              : null,
+            type: course.type,
+            provider: course.provider
+          }
+        })
+      }
+
       res.json({
         status: 200,
         message: '趕快下單吧',
-        data: courseData,
+        data: responseData.data,
         totalPrice: totalPrice
       })
     } catch (error) {
