@@ -128,7 +128,7 @@ exports.course = {
         })
       }
 
-      if (!originPrice) {
+      if (originPrice === null || originPrice === undefined) {
         return res.status(400).json({
           status: false,
           message: '原價未填'
@@ -247,7 +247,7 @@ exports.course = {
 
       const emptyFields = []
       for (const field of Object.keys(fieldNames)) {
-        if (!course[field]) {
+        if (course[field] === null || course[field] === undefined) {
           emptyFields.push(fieldNames[field])
         }
       }
