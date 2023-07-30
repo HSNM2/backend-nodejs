@@ -3,6 +3,7 @@ const { User } = require('models/users')
 const { checkUserExist } = require('src/utils/template')
 const { errorTemplateFun } = require('src/utils/template')
 const { URL_PREFIX, COURSE_PROVIDER_COVER_PHOTO_FOLDER_PREFIX } = require('src/js/url')
+const { RatingSummary } = require('models/rating_summarys')
 
 exports.courses = {
   get: async (req, res) => {
@@ -265,6 +266,19 @@ exports.course = {
           isPublish: true
         })
 
+        let ratingSummary = await RatingSummary.findOne({
+          where: {
+            courseId: courseid
+          }
+        })
+
+        if (!ratingSummary) {
+          ratingSummary = await RatingSummary.create({
+            courseId: courseid,
+            avgRating: 0,
+            countRating: 0
+          })
+        }
         if (result) {
           res.json({
             status: true,
